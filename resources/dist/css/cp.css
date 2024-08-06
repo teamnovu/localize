@@ -1,0 +1,32 @@
+.-novu-mt-7 {
+    margin-top: -1.75rem
+}
+.novu-mt-\[-75\%\] {
+    margin-top: -75%
+}
+.novu-mb-6 {
+    margin-bottom: 1.5rem
+}
+.novu-w-\[15rem\] {
+    width: 15rem
+}
+.novu-translate-y-\[-75\%\] {
+    --tw-translate-y: -75%;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+}
+.\!novu-p-3 {
+    padding: 0.75rem !important
+}
+.novu-px-3 {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem
+}
+.novu-pl-2 {
+    padding-left: 0.5rem
+}
+.\!novu-pl-2 {
+    padding-left: 0.5rem !important
+}
+.\!novu-pl-3 {
+    padding-left: 0.75rem !important
+}

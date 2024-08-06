@@ -1,0 +1,42 @@
+{
+    "name": "teamnovu/localize",
+    "autoload": {
+        "psr-4": {
+            "Teamnovu\\Localize\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Teamnovu\\Localize\\Tests\\": "tests"
+        }
+    },
+    "authors": [
+        {
+            "name": "Patrick Stillhart"
+        }
+    ],
+    "require": {
+        "statamic/cms": "^5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^9.0"
+    },
+    "config": {
+        "allow-plugins": {
+            "pixelfear/composer-dist-plugin": true
+        }
+    },
+    "extra": {
+        "statamic": {
+            "name": "Localize",
+            "description": "Localize addon"
+        },
+        "laravel": {
+            "providers": [
+                "Teamnovu\\Localize\\ServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
