@@ -1,8 +1,8 @@
 <template>
     <div class="relative w-full">
-        <div v-if="isDirty" class="absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none">•</div>
+        <div v-if="isDirty" class="absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none" aria-hidden>•</div>
         <div class="input-group">
-            <input v-bind="$attrs" v-model="trackedValue" :name="name" class="input-text">
+            <input v-bind="$attrs" v-model="trackedValue" :id="name" :name="name" class="input-text">
         </div>
     </div>
 </template>

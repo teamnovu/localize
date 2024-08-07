@@ -10,7 +10,7 @@
         <div class="flex gap-4 flex-col novu-grow">
             <!-- main input -->
             <div class="flex gap-2">
-                <TrackedInput :id="formName" :name="formName" :value="value" :placeholder="value" />
+                <TrackedInput :name="formName" :value="value" :placeholder="value" />
                 <button v-if="altCount" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" tabindex="-1"
                     @click="expanded">
                     <svg-icon name="translate"></svg-icon>
@@ -24,7 +24,8 @@
                 <div class="pt-2 flex gap-2 flex-col ">
                     <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 novu-items-center">
                         <div class="field-inner truncate novu-w-[8rem]">
-                            <label class="publish-field-label">
+                            <label class="publish-field-label"
+                                :for="`${formName.replace(`translations[${site}]`, `translations[${alt.handle}]`)}`">
                                 {{ alt.name }}
                             </label>
                         </div>

@@ -286,7 +286,6 @@ var render = function render() {
     staticClass: "flex gap-2"
   }, [_c("TrackedInput", {
     attrs: {
-      id: _vm.formName,
       name: _vm.formName,
       value: _vm.value,
       placeholder: _vm.value
@@ -318,7 +317,10 @@ var render = function render() {
     }, [_c("div", {
       staticClass: "field-inner truncate novu-w-[8rem]"
     }, [_c("label", {
-      staticClass: "publish-field-label"
+      staticClass: "publish-field-label",
+      attrs: {
+        "for": "".concat(_vm.formName.replace("translations[".concat(_vm.site, "]"), "translations[".concat(alt.handle, "]")))
+      }
     }, [_vm._v("\n                            " + _vm._s(alt.name) + "\n                        ")])]), _vm._v(" "), _c("TrackedInput", {
       attrs: {
         id: _vm.name,
@@ -477,7 +479,10 @@ var render = function render() {
   return _c("div", {
     staticClass: "relative w-full"
   }, [_vm.isDirty ? _c("div", {
-    staticClass: "absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none"
+    staticClass: "absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none",
+    attrs: {
+      "aria-hidden": ""
+    }
   }, [_vm._v("•")]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "input-group"
   }, [_vm.$attrs.type === "checkbox" ? _c("input", _vm._b({
@@ -489,6 +494,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      id: _vm.name,
       name: _vm.name,
       type: "checkbox"
     },
@@ -522,6 +528,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      id: _vm.name,
       name: _vm.name,
       type: "radio"
     },
@@ -542,6 +549,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      id: _vm.name,
       name: _vm.name,
       type: _vm.$attrs.type
     },
