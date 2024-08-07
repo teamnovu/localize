@@ -4,37 +4,48 @@ namespace Teamnovu\Localize\Http\Controllers;
 
 use Statamic\Facades\Site;
 use Illuminate\Support\Facades\File;
+use Illuminate\Http\Request;
 
 class DashboardController
 {
     public function index()
     {
-        $site = Site::current()->handle();
-        $filePath = base_path("content/localize/{$site}.json");
+        $site = Site::selected()->handle();
 
-        $translations = File::get($filePath);
+        $sites = Site::all()->map(fn ($site) => [
+            'handle' => $site->handle(),
+            'name' => $site->name(),
+            'translations' => File::get(base_path("content/localize/{$site->handle()}.json")),
+        ]);
 
         return view('localize::dashboard', [
             'site' => $site,
-            'translations' => $translations,
+            'sites' => $sites,
         ]);
     }
 
-    public function update()
+    public function update(Request $request)
     {
-        $site = request()->get('site');
-        $filePath = base_path("content/localize/{$site}.json");
+        collect($request->input('translations'))->each(function (array $translation, string $key) {
 
-        $updated = json_encode(
-            request()->get('translations'),
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        );
+            // middleware ConvertEmptyStringsToNull will convert empty strings to null
+            // we need empty strings to be empty strings
+            array_walk_recursive($translation, function (&$item) {$item = strval($item); });
 
-        File::put($filePath, $updated);
+            $filePath = base_path("content/localize/{$key}.json");
+            $original = json_decode(File::get($filePath), true);
+
+            $updated = array_replace_recursive($original, $translation);
+
+            $updatedJson = json_encode(
+                $updated,
+                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+            );
+            File::put($filePath, $updatedJson);
+        });
 
         return response()->json([
             'status' => 'updated',
         ]);
-
     }
 }

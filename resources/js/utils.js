@@ -1,4 +1,8 @@
-export function deslug(string) {
+export function deslug(string = '') {
+    if (typeof string !== 'string') {
+        return string;
+    }
+
     return string
         // Replace underscores with spaces
         .replace(/_/g, ' ')

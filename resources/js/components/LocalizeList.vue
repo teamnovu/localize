@@ -1,18 +1,29 @@
 <template>
     <form @submit.prevent="save" ref="form">
 
-        <input name="site" type="hidden" :value="site" />
+        <header class="mb-8">
+            <button class="novu-float-right btn-primary">{{ __('Save') }}</button>
+            <h1>Localize</h1>
+            <p>
+                Texts may contain special characters, that will be replaced on the website.<br>
+                These can be <code>{name}</code> or <code>:count</code> for example.
+            </p>
+        </header>
 
-        <div v-for="value, first of translations" :key="first" class="card p-6 content novu-mb-6 form-group">
+        <div v-for="value, first of translation " :key="first" class="card p-6 content novu-mb-6 form-group">
             <h2 class="mb-4">{{ deslug(first) }}</h2>
-            <Entry v-if="typeof value === 'string'" :name="first" :value="value" prefix="translations" />
-            <div v-else>
-                <div v-for="value, second of value" :key="second">
-                    <Entry v-if="typeof value === 'string'" :name="second" :value="value"
-                        :prefix="`translations[${first}]`" />
-                    <Group v-else :name="second" :value="value" :prefix="`translations[${first}]`" />
-                </div>
-            </div>
+            <Entry v-if="typeof value === 'string'" :name="first" :value="value" :path="[]" class="px-0" />
+            <template v-else>
+                <template v-for="value, second of value ">
+                    <Entry v-if="typeof value === 'string'" :name="second" :value="value" :path="[first]"
+                        class=" px-0" />
+                    <Group v-else :name="second" :value="value" :path="[first]" parent />
+                </template>
+            </template>
+        </div>
+
+        <div v-if="Object.values(translation).length === 0" class="card p-6 content">
+            <p>No translations found</p>
         </div>
 
     </form>
@@ -31,7 +42,7 @@ export default {
 
     props: {
         site: String,
-        translations: Array,
+        sites: Object,
         action: String,
     },
 
@@ -40,6 +51,24 @@ export default {
             errors: {},
             saving: false,
             saveKeyBinding: null
+        }
+    },
+
+    computed: {
+        translation() {
+            return JSON.parse(this.sites[this.site].translations)
+        }
+    },
+
+    provide() {
+        const alternatives = ({ ...this.sites })
+        delete alternatives[this.site]
+        Object.values(alternatives).forEach((alt) => alt.translations = JSON.parse(alt.translations))
+
+        return {
+            site: this.site,
+            sites: this.sites,
+            alternatives
         }
     },
 
@@ -65,7 +94,7 @@ export default {
                 url: this.action,
                 data: this.$refs.form,
             })
-                .then((response) => {
+                .then(() => {
                     this.saving = false
                     this.$toast.success(__('Saved'))
                 })

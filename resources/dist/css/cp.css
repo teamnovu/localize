@@ -1,32 +1,73 @@
-.-novu-mt-7 {
-    margin-top: -1.75rem
+.novu-pointer-events-none {
+    pointer-events: none !important
 }
-.novu-mt-\[-75\%\] {
-    margin-top: -75%
+.novu-right-3 {
+    right: 0.75rem !important
+}
+.novu-float-right {
+    float: right !important
 }
 .novu-mb-6 {
-    margin-bottom: 1.5rem
+    margin-bottom: 1.5rem !important
 }
-.novu-w-\[15rem\] {
-    width: 15rem
+.novu-mt-5 {
+    margin-top: 1.25rem !important
+}
+.novu-mt-\[0\.4rem\] {
+    margin-top: 0.4rem !important
+}
+.novu-w-\[2\.5rem\] {
+    width: 2.5rem !important
+}
+.novu-w-\[8rem\] {
+    width: 8rem !important
+}
+.novu-grow {
+    flex-grow: 1 !important
 }
 .novu-translate-y-\[-75\%\] {
-    --tw-translate-y: -75%;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))
+    --tw-translate-y: -75% !important;
+    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important
+}
+.novu-flex-wrap {
+    flex-wrap: wrap !important
+}
+.novu-items-center {
+    align-items: center !important
+}
+.novu-overflow-hidden {
+    overflow: hidden !important
 }
 .\!novu-p-3 {
     padding: 0.75rem !important
 }
+.\!novu-px-3 {
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important
+}
 .novu-px-3 {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important
 }
-.novu-pl-2 {
-    padding-left: 0.5rem
+.novu-pr-0 {
+    padding-right: 0px !important
 }
-.\!novu-pl-2 {
-    padding-left: 0.5rem !important
+.novu-transition-all {
+    transition-property: all !important;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
+    transition-duration: 150ms !important
 }
-.\!novu-pl-3 {
-    padding-left: 0.75rem !important
+.novu-duration-300 {
+    transition-duration: 300ms !important
+}
+@media (min-width: 768px) {
+    .md\:\!novu-w-\[15rem\] {
+        width: 15rem !important
+    }
+    .md\:novu-w-\[15rem\] {
+        width: 15rem !important
+    }
+}
+.section+.\[\.section\+\&\]\:novu-mt-6 {
+    margin-top: 1.5rem !important
 }
