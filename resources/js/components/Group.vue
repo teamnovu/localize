@@ -1,8 +1,8 @@
 <template>
     <Entry v-if="typeof value === 'string'" :name="name" :value="value" :path="path" class="pl-3 novu-pr-0" />
-    <fieldset v-else class="border dark:border-dark-900 rounded shadow-sm !novu-p-3 novu-mt-5 section">
+    <fieldset v-else class="border dark:border-dark-900 rounded shadow-sm !novu-p-2 novu-mt-5 section">
         <legend class="novu-translate-y-[-75%] absolute">
-            <Compoennt :is="parent ? 'h3' : 'h4'" class="bg-white inline-block novu-px-3">
+            <Compoennt :is="parent ? 'h3' : 'h4'" class="bg-white dark:bg-dark-600 inline-block novu-px-3">
                 {{ deslug(name) }}
             </Compoennt>
         </legend>

@@ -16,30 +16,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _TrackedInput_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrackedInput.vue */ "./resources/js/components/TrackedInput.vue");
 function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
 function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
-function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
-function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
 
-function walkObject(object, path, name) {
-  var sub = object;
-  var _iterator = _createForOfIteratorHelper(path),
-    _step;
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var step = _step.value;
-      sub = sub[step];
-      if (!sub) return undefined;
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-  return sub[name];
-}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     TrackedInput: _TrackedInput_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -70,12 +52,12 @@ function walkObject(object, path, name) {
         return {
           handle: alt.handle,
           name: alt.name,
-          value: walkObject(alt.translations, _this.path, _this.name)
+          value: (0,_utils__WEBPACK_IMPORTED_MODULE_0__.walkObject)(alt.translations, _this.path, _this.name)
         };
       });
     },
     altCount: function altCount() {
-      return Object.values(this.sites).length - 1;
+      return Object.keys(this.sites).length - 1;
     }
   },
   methods: {
@@ -153,8 +135,6 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       trackedSites: this.sites,
-      errors: {},
-      saving: false,
       saveKeyBinding: null
     };
   },
@@ -180,30 +160,23 @@ __webpack_require__.r(__webpack_exports__);
     deslug: _utils__WEBPACK_IMPORTED_MODULE_2__.deslug,
     save: function save() {
       var _this2 = this;
-      this.saving = true;
-      this.clearErrors();
       this.$axios({
         method: "POST",
         url: this.action,
         data: this.$refs.form
       }).then(function (response) {
-        _this2.saving = false;
         _this2.$toast.success(response.data.status);
         _this2.trackedSites = Object.assign(_this2.trackedSites, response.data.sites);
       })["catch"](function (error) {
         return _this2.handleAxiosError(error);
       });
     },
-    clearErrors: function clearErrors() {
-      this.errors = {};
-    },
     handleAxiosError: function handleAxiosError(e) {
-      this.saving = false;
       if (e.response && e.response.status === 422) {
         var _e$response$data = e.response.data,
           message = _e$response$data.message,
           errors = _e$response$data.errors;
-        this.errors = errors;
+        console.error(errors);
         this.$toast.error(message);
       } else if (e.response) {
         this.$toast.error(e.response.data.message);
@@ -365,12 +338,12 @@ var render = function render() {
       path: _vm.path
     }
   }) : _c("fieldset", {
-    staticClass: "border dark:border-dark-900 rounded shadow-sm !novu-p-3 novu-mt-5 section"
+    staticClass: "border dark:border-dark-900 rounded shadow-sm !novu-p-2 novu-mt-5 section"
   }, [_c("legend", {
     staticClass: "novu-translate-y-[-75%] absolute"
   }, [_c(_vm.parent ? "h3" : "h4", {
     tag: "Compoennt",
-    staticClass: "bg-white inline-block novu-px-3"
+    staticClass: "bg-white dark:bg-dark-600 inline-block novu-px-3"
   }, [_vm._v("\n            " + _vm._s(_vm.deslug(_vm.name)) + "\n        ")])], 1), _vm._v(" "), _vm._l(_vm.value, function (children, key) {
     return _c("Group", {
       key: key,
@@ -414,7 +387,11 @@ var render = function render() {
     staticClass: "mb-8"
   }, [_c("button", {
     staticClass: "novu-float-right btn-primary"
-  }, [_vm._v(_vm._s(_vm.__("Save")))]), _vm._v(" "), _c("h1", [_vm._v("Localize")]), _vm._v(" "), _vm._m(0)]), _vm._v(" "), _vm._l(_vm.translation, function (value, first) {
+  }, [_vm._v(_vm._s(_vm.__("Save")))]), _vm._v(" "), _c("h1", [_vm._v(_vm._s(_vm.__("localize::general.title")))]), _vm._v(" "), _c("p", {
+    domProps: {
+      innerHTML: _vm._s(_vm.__("localize::general.intro"))
+    }
+  })]), _vm._v(" "), _vm._l(_vm.translation, function (value, first) {
     return _c("div", {
       key: first,
       staticClass: "card p-6 content novu-mb-6 form-group"
@@ -446,13 +423,9 @@ var render = function render() {
     })]], 2);
   }), _vm._v(" "), Object.values(_vm.translation).length === 0 ? _c("div", {
     staticClass: "card p-6 content"
-  }, [_c("p", [_vm._v("No translations found")])]) : _vm._e()], 2);
+  }, [_c("p", [_vm._v(_vm._s(_vm.__("localize::general.no_content")))])]) : _vm._e()], 2);
 };
-var staticRenderFns = [function () {
-  var _vm = this,
-    _c = _vm._self._c;
-  return _c("p", [_vm._v("\n            Texts may include placeholders like "), _c("code", [_vm._v("{name}")]), _vm._v(" or "), _c("code", [_vm._v(":count")]), _vm._v(",\n            which will be replaced dynamically on the website. Keep these placeholders intact\n            and in their correct positions.\n        ")]);
-}];
+var staticRenderFns = [];
 render._withStripped = true;
 
 
@@ -581,8 +554,12 @@ Statamic.$components.register("localize-list", _components_LocalizeList__WEBPACK
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   deslug: () => (/* binding */ deslug)
+/* harmony export */   deslug: () => (/* binding */ deslug),
+/* harmony export */   walkObject: () => (/* binding */ walkObject)
 /* harmony export */ });
+function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function deslug() {
   var string = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   if (typeof string !== 'string') {
@@ -597,6 +574,23 @@ function deslug() {
   })
   // Add space in camelCase
   .replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+function walkObject(object, path, name) {
+  var sub = object;
+  var _iterator = _createForOfIteratorHelper(path),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var step = _step.value;
+      sub = sub[step];
+      if (!sub) return undefined;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  return sub[name];
 }
 
 /***/ }),

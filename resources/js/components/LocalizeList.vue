@@ -3,12 +3,8 @@
 
         <header class="mb-8">
             <button class="novu-float-right btn-primary">{{ __('Save') }}</button>
-            <h1>Localize</h1>
-            <p>
-                Texts may include placeholders like <code>{name}</code> or <code>:count</code>,
-                which will be replaced dynamically on the website. Keep these placeholders intact
-                and in their correct positions.
-            </p>
+            <h1>{{ __('localize::general.title') }}</h1>
+            <p v-html="__('localize::general.intro')"></p>
         </header>
 
         <div v-for="value, first of translation " :key="first" class="card p-6 content novu-mb-6 form-group">
@@ -17,14 +13,14 @@
             <template v-else>
                 <template v-for="value, second of value ">
                     <Entry v-if="typeof value === 'string'" :name="second" :value="value" :path="[first]"
-                        class=" px-0" />
+                        class="px-0" />
                     <Group v-else :name="second" :value="value" :path="[first]" parent />
                 </template>
             </template>
         </div>
 
         <div v-if="Object.values(translation).length === 0" class="card p-6 content">
-            <p>No translations found</p>
+            <p>{{ __('localize::general.no_content') }}</p>
         </div>
 
     </form>
@@ -50,8 +46,6 @@ export default {
     data() {
         return {
             trackedSites: this.sites,
-            errors: {},
-            saving: false,
             saveKeyBinding: null
         }
     },
@@ -82,30 +76,21 @@ export default {
     methods: {
         deslug,
         save() {
-            this.saving = true
-            this.clearErrors()
-
             this.$axios({
                 method: "POST",
                 url: this.action,
                 data: this.$refs.form,
             })
                 .then((response) => {
-                    this.saving = false
                     this.$toast.success(response.data.status)
                     this.trackedSites = Object.assign(this.trackedSites, response.data.sites)
                 })
                 .catch((error) => this.handleAxiosError(error))
         },
-        clearErrors() {
-            this.errors = {}
-        },
         handleAxiosError(e) {
-            this.saving = false
-
             if (e.response && e.response.status === 422) {
                 const { message, errors } = e.response.data
-                this.errors = errors
+                console.error(errors);
                 this.$toast.error(message)
             } else if (e.response) {
                 this.$toast.error(e.response.data.message)

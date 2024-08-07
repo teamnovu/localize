@@ -11,3 +11,12 @@ export function deslug(string = '') {
         // Add space in camelCase
         .replace(/([a-z])([A-Z])/g, '$1 $2');
 }
+
+export function walkObject(object, path, name) {
+    let sub = object
+    for (let step of path) {
+        sub = sub[step]
+        if (!sub) return undefined
+    }
+    return sub[name]
+}

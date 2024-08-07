@@ -32,6 +32,8 @@ class ServiceProvider extends AddonServiceProvider
             $this->ensureFiles();
         });
 
+        $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'localize');
+
         $this->bootAddonPermissions();
         $this->registerRoutes();
         $this->bootAddonNav();

@@ -39,16 +39,8 @@
 </template>
 
 <script>
-import { deslug } from '../utils'
+import { deslug, walkObject } from '../utils'
 import TrackedInput from './TrackedInput.vue'
-function walkObject(object, path, name) {
-    let sub = object
-    for (let step of path) {
-        sub = sub[step]
-        if (!sub) return undefined
-    }
-    return sub[name]
-}
 export default {
     components: {
         TrackedInput,
@@ -79,7 +71,7 @@ export default {
                 }))
         },
         altCount() {
-            return Object.values(this.sites).length - 1
+            return Object.keys(this.sites).length - 1
         },
     },
     methods: {

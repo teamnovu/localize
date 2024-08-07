@@ -1,5 +1,5 @@
 @extends('statamic::layout')
-@section('title', 'Localize')
+@section('title', __('localize::general.title'))
 
 @section('content')
     <localize-list

@@ -41,6 +41,9 @@
 .\!novu-p-3 {
     padding: 0.75rem !important
 }
+.\!novu-p-2 {
+    padding: 0.5rem !important
+}
 .\!novu-px-3 {
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important
@@ -60,6 +63,12 @@
 @media (min-width: 768px) {
     .md\:novu-w-\[15rem\] {
         width: 15rem !important
+    }
+}
+@media (prefers-color-scheme: dark) {
+    .dark\:novu-border-white {
+        --tw-border-opacity: 1 !important;
+        border-color: rgb(255 255 255 / var(--tw-border-opacity)) !important
     }
 }
 .section+.\[\.section\+\&\]\:novu-mt-6 {
