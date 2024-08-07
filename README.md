@@ -1,6 +1,6 @@
 # Localize
 
-> Localize allows you to easily translate i18n files within your Statamic page.
+> Localize allows you to easily translate i18n files within Statamic
 
 ## Features
 
