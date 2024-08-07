@@ -119,6 +119,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Entry_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Entry.vue */ "./resources/js/components/Entry.vue");
 /* harmony import */ var _Group_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Group.vue */ "./resources/js/components/Group.vue");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
+function _slicedToArray(r, e) { return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function _iterableToArrayLimit(r, l) { var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (null != t) { var e, n, i, u, a = [], f = !0, o = !1; try { if (i = (t = t.call(r)).next, 0 === l) { if (Object(t) !== t) return; f = !1; } else for (; !(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0); } catch (r) { o = !0, n = r; } finally { try { if (!f && null != t["return"] && (u = t["return"](), Object(u) !== u)) return; } finally { if (o) throw n; } } return a; } }
+function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
 
 
 
@@ -139,8 +145,26 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    translation: function translation() {
+    translations: function translations() {
       return this.trackedSites[this.site].translations;
+    },
+    strings: function strings() {
+      return Object.entries(this.translations).reduce(function (acc, _ref) {
+        var _ref2 = _slicedToArray(_ref, 2),
+          key = _ref2[0],
+          value = _ref2[1];
+        if (typeof value === 'string') acc[key] = value;
+        return acc;
+      }, {});
+    },
+    objects: function objects() {
+      return Object.entries(this.translations).reduce(function (acc, _ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+          key = _ref4[0],
+          value = _ref4[1];
+        if (typeof value !== 'string') acc[key] = value;
+        return acc;
+      }, {});
     }
   },
   provide: function provide() {
@@ -340,7 +364,7 @@ var render = function render() {
   }) : _c("fieldset", {
     staticClass: "border dark:border-dark-900 rounded shadow-sm !novu-p-2 novu-mt-5 section"
   }, [_c("legend", {
-    staticClass: "novu-translate-y-[-75%] absolute"
+    staticClass: "novu-translate-y-[-65%] absolute"
   }, [_c(_vm.parent ? "h3" : "h4", {
     tag: "Compoennt",
     staticClass: "bg-white dark:bg-dark-600 inline-block novu-px-3"
@@ -391,37 +415,42 @@ var render = function render() {
     domProps: {
       innerHTML: _vm._s(_vm.__("localize::general.intro"))
     }
-  })]), _vm._v(" "), _vm._l(_vm.translation, function (value, first) {
-    return _c("div", {
+  })]), _vm._v(" "), Object.keys(_vm.strings).length ? _c("div", {
+    staticClass: "card p-6 content novu-mb-6 form-group"
+  }, _vm._l(_vm.strings, function (value, first) {
+    return _c("Entry", {
       key: first,
-      staticClass: "card p-6 content novu-mb-6 form-group"
-    }, [_c("h2", {
-      staticClass: "mb-4"
-    }, [_vm._v(_vm._s(_vm.deslug(first)))]), _vm._v(" "), typeof value === "string" ? _c("Entry", {
       staticClass: "px-0",
       attrs: {
         name: first,
         value: value,
         path: []
       }
-    }) : [_vm._l(value, function (value, second) {
-      return [typeof value === "string" ? _c("Entry", {
+    });
+  }), 1) : _vm._e(), _vm._v(" "), _vm._l(_vm.objects, function (value, first) {
+    return _c("div", {
+      key: first,
+      staticClass: "card p-6 content novu-mb-6 form-group"
+    }, [_c("h2", {
+      staticClass: "mb-3"
+    }, [_vm._v(_vm._s(_vm.deslug(first)))]), _vm._v(" "), _vm._l(value, function (secondValue, second) {
+      return [typeof secondValue === "string" ? _c("Entry", {
         staticClass: "px-0",
         attrs: {
           name: second,
-          value: value,
+          value: secondValue,
           path: [first]
         }
       }) : _c("Group", {
         attrs: {
           name: second,
-          value: value,
+          value: secondValue,
           path: [first],
           parent: ""
         }
       })];
-    })]], 2);
-  }), _vm._v(" "), Object.values(_vm.translation).length === 0 ? _c("div", {
+    })], 2);
+  }), _vm._v(" "), Object.values(_vm.translations).length === 0 ? _c("div", {
     staticClass: "card p-6 content"
   }, [_c("p", [_vm._v(_vm._s(_vm.__("localize::general.no_content")))])]) : _vm._e()], 2);
 };

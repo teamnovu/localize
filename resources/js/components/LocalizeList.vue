@@ -7,19 +7,20 @@
             <p v-html="__('localize::general.intro')"></p>
         </header>
 
-        <div v-for="value, first of translation " :key="first" class="card p-6 content novu-mb-6 form-group">
-            <h2 class="mb-4">{{ deslug(first) }}</h2>
-            <Entry v-if="typeof value === 'string'" :name="first" :value="value" :path="[]" class="px-0" />
-            <template v-else>
-                <template v-for="value, second of value ">
-                    <Entry v-if="typeof value === 'string'" :name="second" :value="value" :path="[first]"
-                        class="px-0" />
-                    <Group v-else :name="second" :value="value" :path="[first]" parent />
-                </template>
+        <div v-if="Object.keys(strings).length" class="card p-6 content novu-mb-6 form-group">
+            <Entry v-for="value, first of strings" :key="first" :name="first" :value="value" :path="[]" class="px-0" />
+        </div>
+
+        <div v-for="value, first of objects" :key="first" class="card p-6 content novu-mb-6 form-group">
+            <h2 class="mb-3">{{ deslug(first) }}</h2>
+            <template v-for="secondValue, second of value">
+                <Entry v-if="typeof secondValue === 'string'" :name="second" :value="secondValue" :path="[first]"
+                    class="px-0" />
+                <Group v-else :name="second" :value="secondValue" :path="[first]" parent />
             </template>
         </div>
 
-        <div v-if="Object.values(translation).length === 0" class="card p-6 content">
+        <div v-if="Object.values(translations).length === 0" class="card p-6 content">
             <p>{{ __('localize::general.no_content') }}</p>
         </div>
 
@@ -51,9 +52,21 @@ export default {
     },
 
     computed: {
-        translation() {
+        translations() {
             return this.trackedSites[this.site].translations
         },
+        strings() {
+            return Object.entries(this.translations).reduce((acc, [key, value]) => {
+                if (typeof value === 'string') acc[key] = value
+                return acc
+            }, {})
+        },
+        objects() {
+            return Object.entries(this.translations).reduce((acc, [key, value]) => {
+                if (typeof value !== 'string') acc[key] = value
+                return acc
+            }, {})
+        }
     },
 
     provide() {
