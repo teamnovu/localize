@@ -11,18 +11,17 @@
             <!-- main input -->
             <div class="flex gap-2">
                 <TrackedInput :name="formName" :value="value" :placeholder="value" />
-                <button v-if="altCount" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" tabindex="-1"
-                    @click="expanded">
+                <button v-if="altCount" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" @click="expanded">
                     <svg-icon name="translate"></svg-icon>
                 </button>
             </div>
 
             <!-- alternatives -->
-            <div v-if="details" class="novu-transition-all novu-overflow-hidden" :style="{
-                height: grow ? altCount * 38 + 8 + 2 + 'px' : 0
+            <div v-if="details" class="novu-transition-all novu-overflow-hidden novu-m-[0_-2px_-2px_0]" :style="{
+                height: grow ? altCount * (38 + 8) + 2 + 'px' : 0
             }">
-                <div class="pt-2 flex gap-2 flex-col ">
-                    <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 novu-items-center">
+                <div class="pt-2 flex gap-2 flex-col novu-pr-[2px]">
+                    <div v-for=" alt of alternatives" :key="alt.handle" class="flex gap-4 novu-items-center">
                         <div class="field-inner truncate novu-w-[8rem]">
                             <label class="publish-field-label"
                                 :for="`${formName.replace(`translations[${site}]`, `translations[${alt.handle}]`)}`">

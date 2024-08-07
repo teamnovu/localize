@@ -293,8 +293,7 @@ var render = function render() {
   }), _vm._v(" "), _vm.altCount ? _c("button", {
     staticClass: "btn !novu-px-3 novu-w-[2.5rem]",
     attrs: {
-      type: "button",
-      tabindex: "-1"
+      type: "button"
     },
     on: {
       click: _vm.expanded
@@ -304,12 +303,12 @@ var render = function render() {
       name: "translate"
     }
   })], 1) : _vm._e()], 1), _vm._v(" "), _vm.details ? _c("div", {
-    staticClass: "novu-transition-all novu-overflow-hidden",
+    staticClass: "novu-transition-all novu-overflow-hidden novu-m-[0_-2px_-2px_0]",
     style: {
-      height: _vm.grow ? _vm.altCount * 38 + 8 + 2 + "px" : 0
+      height: _vm.grow ? _vm.altCount * (38 + 8) + 2 + "px" : 0
     }
   }, [_c("div", {
-    staticClass: "pt-2 flex gap-2 flex-col"
+    staticClass: "pt-2 flex gap-2 flex-col novu-pr-[2px]"
   }, _vm._l(_vm.alternatives, function (alt) {
     return _c("div", {
       key: alt.handle,

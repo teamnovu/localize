@@ -7,6 +7,9 @@
 .novu-float-right {
     float: right !important
 }
+.novu-m-\[0_-2px_-2px_0\] {
+    margin: 0 -2px -2px 0 !important
+}
 .novu-mb-6 {
     margin-bottom: 1.5rem !important
 }
@@ -62,6 +65,9 @@
 }
 .novu-pr-0 {
     padding-right: 0px !important
+}
+.novu-pr-\[2px\] {
+    padding-right: 2px !important
 }
 .novu-transition-all {
     transition-property: all !important;

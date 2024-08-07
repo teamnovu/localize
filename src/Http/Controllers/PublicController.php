@@ -11,6 +11,8 @@ class PublicController extends Controller
         $site = \Request::segment(3);
         $filePath = base_path("content/localize/{$site}.json");
 
+        // ToDo: compress json file
+
         return response()->file($filePath);
     }
 }
