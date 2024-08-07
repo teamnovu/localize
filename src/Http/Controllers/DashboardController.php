@@ -10,17 +10,9 @@ class DashboardController
 {
     public function index()
     {
-        $site = Site::selected()->handle();
-
-        $sites = Site::all()->map(fn ($site) => [
-            'handle' => $site->handle(),
-            'name' => $site->name(),
-            'translations' => File::get(base_path("content/localize/{$site->handle()}.json")),
-        ]);
-
         return view('localize::dashboard', [
-            'site' => $site,
-            'sites' => $sites,
+            'site' => Site::selected()->handle(),
+            'sites' => $this->getSites(),
         ]);
     }
 
@@ -45,7 +37,17 @@ class DashboardController
         });
 
         return response()->json([
-            'status' => 'updated',
+            'status' => __('Saved'),
+            'sites' => $this->getSites(),
+        ]);
+    }
+
+    private function getSites()
+    {
+        return Site::all()->map(fn ($site) => [
+            'handle' => $site->handle(),
+            'name' => $site->name(),
+            'translations' => json_decode(File::get(base_path("content/localize/{$site->handle()}.json")), true),
         ]);
     }
 }

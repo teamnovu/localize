@@ -5,8 +5,9 @@
             <button class="novu-float-right btn-primary">{{ __('Save') }}</button>
             <h1>Localize</h1>
             <p>
-                Texts may contain special characters, that will be replaced on the website.<br>
-                These can be <code>{name}</code> or <code>:count</code> for example.
+                Texts may include placeholders like <code>{name}</code> or <code>:count</code>,
+                which will be replaced dynamically on the website. Keep these placeholders intact
+                and in their correct positions.
             </p>
         </header>
 
@@ -48,6 +49,7 @@ export default {
 
     data() {
         return {
+            trackedSites: this.sites,
             errors: {},
             saving: false,
             saveKeyBinding: null
@@ -56,19 +58,14 @@ export default {
 
     computed: {
         translation() {
-            return JSON.parse(this.sites[this.site].translations)
-        }
+            return this.trackedSites[this.site].translations
+        },
     },
 
     provide() {
-        const alternatives = ({ ...this.sites })
-        delete alternatives[this.site]
-        Object.values(alternatives).forEach((alt) => alt.translations = JSON.parse(alt.translations))
-
         return {
             site: this.site,
-            sites: this.sites,
-            alternatives
+            sites: this.trackedSites,
         }
     },
 
@@ -84,7 +81,6 @@ export default {
 
     methods: {
         deslug,
-
         save() {
             this.saving = true
             this.clearErrors()
@@ -94,24 +90,21 @@ export default {
                 url: this.action,
                 data: this.$refs.form,
             })
-                .then(() => {
+                .then((response) => {
                     this.saving = false
-                    this.$toast.success(__('Saved'))
+                    this.$toast.success(response.data.status)
+                    this.trackedSites = Object.assign(this.trackedSites, response.data.sites)
                 })
                 .catch((error) => this.handleAxiosError(error))
         },
-
         clearErrors() {
-            this.error = null
             this.errors = {}
         },
-
         handleAxiosError(e) {
             this.saving = false
 
             if (e.response && e.response.status === 422) {
                 const { message, errors } = e.response.data
-                this.error = message
                 this.errors = errors
                 this.$toast.error(message)
             } else if (e.response) {
@@ -120,7 +113,6 @@ export default {
                 this.$toast.error(e || 'Something went wrong')
             }
         },
-
     },
 
     destroyed() {

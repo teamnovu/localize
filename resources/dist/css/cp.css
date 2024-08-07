@@ -57,13 +57,7 @@
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
     transition-duration: 150ms !important
 }
-.novu-duration-300 {
-    transition-duration: 300ms !important
-}
 @media (min-width: 768px) {
-    .md\:\!novu-w-\[15rem\] {
-        width: 15rem !important
-    }
     .md\:novu-w-\[15rem\] {
         width: 15rem !important
     }

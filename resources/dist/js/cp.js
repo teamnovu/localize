@@ -14,11 +14,32 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
 /* harmony import */ var _TrackedInput_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./TrackedInput.vue */ "./resources/js/components/TrackedInput.vue");
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 
 
+function walkObject(object, path, name) {
+  var sub = object;
+  var _iterator = _createForOfIteratorHelper(path),
+    _step;
+  try {
+    for (_iterator.s(); !(_step = _iterator.n()).done;) {
+      var step = _step.value;
+      sub = sub[step];
+      if (!sub) return undefined;
+    }
+  } catch (err) {
+    _iterator.e(err);
+  } finally {
+    _iterator.f();
+  }
+  return sub[name];
+}
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
     TrackedInput: _TrackedInput_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
@@ -28,7 +49,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
     value: String,
     path: Array
   },
-  inject: ['site', 'alternatives'],
+  inject: ['site', 'sites'],
   data: function data() {
     return {
       details: false,
@@ -37,38 +58,33 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
   },
   computed: {
     formName: function formName() {
-      return "translations[".concat(this.site, "]").concat(this.path.map(function (s) {
+      return 'translations' + [this.site].concat(_toConsumableArray(this.path), [this.name]).map(function (s) {
         return "[".concat(s, "]");
-      }).join(''), "[").concat(this.name, "]");
+      }).join('');
     },
-    count: function count() {
-      return Object.keys(this.alternatives).length;
+    alternatives: function alternatives() {
+      var _this = this;
+      return Object.values(this.sites).filter(function (alt) {
+        return alt.handle != _this.site;
+      }).map(function (alt) {
+        return {
+          handle: alt.handle,
+          name: alt.name,
+          value: walkObject(alt.translations, _this.path, _this.name)
+        };
+      });
+    },
+    altCount: function altCount() {
+      return Object.values(this.sites).length - 1;
     }
   },
   methods: {
     deslug: _utils__WEBPACK_IMPORTED_MODULE_0__.deslug,
-    getAltTranslation: function getAltTranslation(alt) {
-      var translation = alt.translations;
-      var _iterator = _createForOfIteratorHelper(this.path),
-        _step;
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var step = _step.value;
-          translation = translation[step];
-          if (!translation) return '';
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-      return translation[this.name];
-    },
     expanded: function expanded() {
-      var _this = this;
+      var _this2 = this;
       this.details = true;
       setTimeout(function () {
-        _this.grow = !_this.grow;
+        _this2.grow = !_this2.grow;
       }, 10);
     }
   }
@@ -121,12 +137,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Entry_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Entry.vue */ "./resources/js/components/Entry.vue");
 /* harmony import */ var _Group_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Group.vue */ "./resources/js/components/Group.vue");
 /* harmony import */ var _utils__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils */ "./resources/js/utils.js");
-function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
-function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
-function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
-function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
-function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
-function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 
 
 
@@ -142,6 +152,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   data: function data() {
     return {
+      trackedSites: this.sites,
       errors: {},
       saving: false,
       saveKeyBinding: null
@@ -149,19 +160,13 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
   },
   computed: {
     translation: function translation() {
-      return JSON.parse(this.sites[this.site].translations);
+      return this.trackedSites[this.site].translations;
     }
   },
   provide: function provide() {
-    var alternatives = _objectSpread({}, this.sites);
-    delete alternatives[this.site];
-    Object.values(alternatives).forEach(function (alt) {
-      return alt.translations = JSON.parse(alt.translations);
-    });
     return {
       site: this.site,
-      sites: this.sites,
-      alternatives: alternatives
+      sites: this.trackedSites
     };
   },
   mounted: function mounted() {
@@ -181,15 +186,15 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         method: "POST",
         url: this.action,
         data: this.$refs.form
-      }).then(function () {
+      }).then(function (response) {
         _this2.saving = false;
-        _this2.$toast.success(__('Saved'));
+        _this2.$toast.success(response.data.status);
+        _this2.trackedSites = Object.assign(_this2.trackedSites, response.data.sites);
       })["catch"](function (error) {
         return _this2.handleAxiosError(error);
       });
     },
     clearErrors: function clearErrors() {
-      this.error = null;
       this.errors = {};
     },
     handleAxiosError: function handleAxiosError(e) {
@@ -198,7 +203,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         var _e$response$data = e.response.data,
           message = _e$response$data.message,
           errors = _e$response$data.errors;
-        this.error = message;
         this.errors = errors;
         this.$toast.error(message);
       } else if (e.response) {
@@ -227,15 +231,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   inheritAttrs: false,
+  props: {
+    name: String,
+    value: String
+  },
   data: function data() {
-    var _this$$attrs$value;
     return {
-      value: (_this$$attrs$value = this.$attrs.value) !== null && _this$$attrs$value !== void 0 ? _this$$attrs$value : ''
+      trackedValue: this.value
     };
   },
   computed: {
-    dirty: function dirty() {
-      return this.value != this.$attrs.value;
+    isDirty: function isDirty() {
+      return this.trackedValue != this.value;
+    }
+  },
+  watch: {
+    isDirty: function isDirty(_isDirty) {
+      if (_isDirty) this.$dirty.add(this.name);else this.$dirty.remove(this.name);
     }
   }
 });
@@ -282,7 +294,7 @@ var render = function render() {
       value: _vm.value,
       placeholder: _vm.value
     }
-  }), _vm._v(" "), _vm.count ? _c("button", {
+  }), _vm._v(" "), _vm.altCount ? _c("button", {
     staticClass: "btn !novu-px-3 novu-w-[2.5rem]",
     attrs: {
       type: "button",
@@ -298,12 +310,13 @@ var render = function render() {
   })], 1) : _vm._e()], 1), _vm._v(" "), _vm.details ? _c("div", {
     staticClass: "novu-transition-all novu-overflow-hidden",
     style: {
-      height: _vm.grow ? _vm.count * 41 + 8 + "px" : 0
+      height: _vm.grow ? _vm.altCount * 38 + 8 + 2 + "px" : 0
     }
   }, [_c("div", {
     staticClass: "pt-2 flex gap-2 flex-col"
   }, _vm._l(_vm.alternatives, function (alt) {
     return _c("div", {
+      key: alt.handle,
       staticClass: "flex gap-4 novu-items-center"
     }, [_c("div", {
       staticClass: "field-inner truncate novu-w-[8rem]"
@@ -312,8 +325,8 @@ var render = function render() {
     }, [_vm._v("\n                            " + _vm._s(alt.name) + "\n                        ")])]), _vm._v(" "), _c("TrackedInput", {
       attrs: {
         id: _vm.name,
-        name: "".concat(_vm.formName.replace("[".concat(_vm.site, "]"), "[".concat(alt.handle, "]"))),
-        value: _vm.getAltTranslation(alt)
+        name: "".concat(_vm.formName.replace("translations[".concat(_vm.site, "]"), "translations[".concat(alt.handle, "]"))),
+        value: alt.value
       }
     })], 1);
   }), 0)]) : _vm._e()])]);
@@ -438,7 +451,7 @@ var render = function render() {
 var staticRenderFns = [function () {
   var _vm = this,
     _c = _vm._self._c;
-  return _c("p", [_vm._v("\n            Texts may contain special characters, that will be replaced on the website."), _c("br"), _vm._v("\n            These can be "), _c("code", [_vm._v("{name}")]), _vm._v(" or "), _c("code", [_vm._v(":count")]), _vm._v(" for example.\n        ")]);
+  return _c("p", [_vm._v("\n            Texts may include placeholders like "), _c("code", [_vm._v("{name}")]), _vm._v(" or "), _c("code", [_vm._v(":count")]), _vm._v(",\n            which will be replaced dynamically on the website. Keep these placeholders intact\n            and in their correct positions.\n        ")]);
 }];
 render._withStripped = true;
 
@@ -461,7 +474,7 @@ var render = function render() {
     _c = _vm._self._c;
   return _c("div", {
     staticClass: "relative w-full"
-  }, [_vm.dirty ? _c("div", {
+  }, [_vm.isDirty ? _c("div", {
     staticClass: "absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none"
   }, [_vm._v("•")]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "input-group"
@@ -469,31 +482,32 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.value,
-      expression: "value"
+      value: _vm.trackedValue,
+      expression: "trackedValue"
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: "checkbox"
     },
     domProps: {
-      checked: Array.isArray(_vm.value) ? _vm._i(_vm.value, null) > -1 : _vm.value
+      checked: Array.isArray(_vm.trackedValue) ? _vm._i(_vm.trackedValue, null) > -1 : _vm.trackedValue
     },
     on: {
       change: function change($event) {
-        var $$a = _vm.value,
+        var $$a = _vm.trackedValue,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
           var $$v = null,
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && (_vm.value = $$a.concat([$$v]));
+            $$i < 0 && (_vm.trackedValue = $$a.concat([$$v]));
           } else {
-            $$i > -1 && (_vm.value = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && (_vm.trackedValue = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.value = $$c;
+          _vm.trackedValue = $$c;
         }
       }
     }
@@ -501,39 +515,41 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.value,
-      expression: "value"
+      value: _vm.trackedValue,
+      expression: "trackedValue"
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: "radio"
     },
     domProps: {
-      checked: _vm._q(_vm.value, null)
+      checked: _vm._q(_vm.trackedValue, null)
     },
     on: {
       change: function change($event) {
-        _vm.value = null;
+        _vm.trackedValue = null;
       }
     }
   }, "input", _vm.$attrs, false)) : _c("input", _vm._b({
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.value,
-      expression: "value"
+      value: _vm.trackedValue,
+      expression: "trackedValue"
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: _vm.$attrs.type
     },
     domProps: {
-      value: _vm.value
+      value: _vm.trackedValue
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.value = $event.target.value;
+        _vm.trackedValue = $event.target.value;
       }
     }
   }, "input", _vm.$attrs, false))])]);

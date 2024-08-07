@@ -11,7 +11,7 @@
             <!-- main input -->
             <div class="flex gap-2">
                 <TrackedInput :id="formName" :name="formName" :value="value" :placeholder="value" />
-                <button v-if="count" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" tabindex="-1"
+                <button v-if="altCount" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" tabindex="-1"
                     @click="expanded">
                     <svg-icon name="translate"></svg-icon>
                 </button>
@@ -19,17 +19,18 @@
 
             <!-- alternatives -->
             <div v-if="details" class="novu-transition-all novu-overflow-hidden" :style="{
-                height: grow ? count * 41 + 8 + 'px' : 0
+                height: grow ? altCount * 38 + 8 + 2 + 'px' : 0
             }">
                 <div class="pt-2 flex gap-2 flex-col ">
-                    <div v-for="alt of alternatives" class="flex gap-4 novu-items-center">
+                    <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 novu-items-center">
                         <div class="field-inner truncate novu-w-[8rem]">
                             <label class="publish-field-label">
                                 {{ alt.name }}
                             </label>
                         </div>
-                        <TrackedInput :id="name" :name="`${formName.replace(`[${site}]`, `[${alt.handle}]`)}`"
-                            :value="getAltTranslation(alt)" />
+                        <TrackedInput :id="name"
+                            :name="`${formName.replace(`translations[${site}]`, `translations[${alt.handle}]`)}`"
+                            :value="alt.value" />
                     </div>
                 </div>
             </div>
@@ -40,6 +41,14 @@
 <script>
 import { deslug } from '../utils'
 import TrackedInput from './TrackedInput.vue'
+function walkObject(object, path, name) {
+    let sub = object
+    for (let step of path) {
+        sub = sub[step]
+        if (!sub) return undefined
+    }
+    return sub[name]
+}
 export default {
     components: {
         TrackedInput,
@@ -49,7 +58,7 @@ export default {
         value: String,
         path: Array,
     },
-    inject: ['site', 'alternatives'],
+    inject: ['site', 'sites'],
     data() {
         return {
             details: false,
@@ -58,27 +67,26 @@ export default {
     },
     computed: {
         formName() {
-            return `translations[${this.site}]${this.path.map(s => `[${s}]`).join('')}[${this.name}]`
+            return 'translations' + [this.site, ...this.path, this.name].map(s => `[${s}]`).join('')
         },
-        count() {
-            return Object.keys(this.alternatives).length
-        }
+        alternatives() {
+            return Object.values(this.sites)
+                .filter(alt => alt.handle != this.site)
+                .map((alt) => ({
+                    handle: alt.handle,
+                    name: alt.name,
+                    value: walkObject(alt.translations, this.path, this.name)
+                }))
+        },
+        altCount() {
+            return Object.values(this.sites).length - 1
+        },
     },
     methods: {
         deslug,
-        getAltTranslation(alt) {
-            let translation = alt.translations
-            for (let step of this.path) {
-                translation = translation[step]
-                if (!translation) return ''
-            }
-            return translation[this.name]
-        },
         expanded() {
             this.details = true
-            setTimeout(() => {
-                this.grow = !this.grow
-            }, 10)
+            setTimeout(() => { this.grow = !this.grow }, 10)
         }
     }
 }
