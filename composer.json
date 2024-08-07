@@ -1,5 +1,7 @@
 {
     "name": "teamnovu/localize",
+    "description": "Adds a Statamic vie that allows to edit i18n translation files.",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Teamnovu\\Localize\\": "src"
