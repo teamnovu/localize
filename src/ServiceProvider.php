@@ -66,7 +66,7 @@ class ServiceProvider extends AddonServiceProvider
             if ($user->can('edit localize')) {
                 $nav->content('Localize')
                     ->route('localize.dashboard')
-                    ->icon('earth');
+                    ->icon('partial');
             }
         });
     }
