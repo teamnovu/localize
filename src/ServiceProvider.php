@@ -73,15 +73,16 @@ class ServiceProvider extends AddonServiceProvider
 
     protected function registerRoutes()
     {
+
         if (config('localize.api_disabled')) {
             return false;
         }
 
-        if (! config('statamic.api.enabled') || ! config('statamic.graphql.enabled')) {
+        if (! config('statamic.api.enabled') && ! config('statamic.graphql.enabled')) {
             return false;
         }
 
-        Route::prefix(config('localize.route'))->group(function () {
+        Route::prefix(config('localize.api_route'))->group(function () {
             Site::all()->each(fn ($site) => Route::get(
                 $site->handle(),
                 [PublicController::class, 'serve']
