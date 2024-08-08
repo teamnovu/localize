@@ -28,14 +28,6 @@
 .novu-grow {
     flex-grow: 1 !important
 }
-.novu-translate-y-\[-75\%\] {
-    --tw-translate-y: -75% !important;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important
-}
-.novu-translate-y-\[-70\%\] {
-    --tw-translate-y: -70% !important;
-    transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important
-}
 .novu-translate-y-\[-65\%\] {
     --tw-translate-y: -65% !important;
     transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y)) !important
@@ -48,9 +40,6 @@
 }
 .novu-overflow-hidden {
     overflow: hidden !important
-}
-.\!novu-p-3 {
-    padding: 0.75rem !important
 }
 .\!novu-p-2 {
     padding: 0.5rem !important
@@ -77,12 +66,6 @@
 @media (min-width: 768px) {
     .md\:novu-w-\[15rem\] {
         width: 15rem !important
-    }
-}
-@media (prefers-color-scheme: dark) {
-    .dark\:novu-border-white {
-        --tw-border-opacity: 1 !important;
-        border-color: rgb(255 255 255 / var(--tw-border-opacity)) !important
     }
 }
 .section+.\[\.section\+\&\]\:novu-mt-6 {

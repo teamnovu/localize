@@ -21,6 +21,9 @@ export default {
     },
     computed: {
         isDirty() {
+            // handle "<empty string>" in firefox
+            if (!this.trackedValue && !this.value) return false;
+
             return this.trackedValue != this.value
         }
     },

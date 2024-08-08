@@ -239,6 +239,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   computed: {
     isDirty: function isDirty() {
+      // handle "<empty string>" in firefox
+      if (!this.trackedValue && !this.value) return false;
       return this.trackedValue != this.value;
     }
   },
