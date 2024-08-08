@@ -486,73 +486,20 @@ var render = function render() {
     }
   }, [_vm._v("•")]) : _vm._e(), _vm._v(" "), _c("div", {
     staticClass: "input-group"
-  }, [_vm.$attrs.type === "checkbox" ? _c("input", _vm._b({
+  }, [_c("input", _vm._b({
     directives: [{
       name: "model",
-      rawName: "v-model",
+      rawName: "v-model.trim",
       value: _vm.trackedValue,
-      expression: "trackedValue"
-    }],
-    staticClass: "input-text",
-    attrs: {
-      id: _vm.name,
-      name: _vm.name,
-      type: "checkbox"
-    },
-    domProps: {
-      checked: Array.isArray(_vm.trackedValue) ? _vm._i(_vm.trackedValue, null) > -1 : _vm.trackedValue
-    },
-    on: {
-      change: function change($event) {
-        var $$a = _vm.trackedValue,
-          $$el = $event.target,
-          $$c = $$el.checked ? true : false;
-        if (Array.isArray($$a)) {
-          var $$v = null,
-            $$i = _vm._i($$a, $$v);
-          if ($$el.checked) {
-            $$i < 0 && (_vm.trackedValue = $$a.concat([$$v]));
-          } else {
-            $$i > -1 && (_vm.trackedValue = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
-          }
-        } else {
-          _vm.trackedValue = $$c;
-        }
+      expression: "trackedValue",
+      modifiers: {
+        trim: true
       }
-    }
-  }, "input", _vm.$attrs, false)) : _vm.$attrs.type === "radio" ? _c("input", _vm._b({
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.trackedValue,
-      expression: "trackedValue"
     }],
     staticClass: "input-text",
     attrs: {
       id: _vm.name,
-      name: _vm.name,
-      type: "radio"
-    },
-    domProps: {
-      checked: _vm._q(_vm.trackedValue, null)
-    },
-    on: {
-      change: function change($event) {
-        _vm.trackedValue = null;
-      }
-    }
-  }, "input", _vm.$attrs, false)) : _c("input", _vm._b({
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: _vm.trackedValue,
-      expression: "trackedValue"
-    }],
-    staticClass: "input-text",
-    attrs: {
-      id: _vm.name,
-      name: _vm.name,
-      type: _vm.$attrs.type
+      name: _vm.name
     },
     domProps: {
       value: _vm.trackedValue
@@ -560,7 +507,10 @@ var render = function render() {
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.trackedValue = $event.target.value;
+        _vm.trackedValue = $event.target.value.trim();
+      },
+      blur: function blur($event) {
+        return _vm.$forceUpdate();
       }
     }
   }, "input", _vm.$attrs, false))])]);
