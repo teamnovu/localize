@@ -7,7 +7,6 @@ use Illuminate\Support\Facades\Route;
 use Statamic\Facades\CP\Nav;
 use Statamic\Facades\Permission;
 use Statamic\Facades\Site;
-use Statamic\Facades\User;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use Teamnovu\Localize\Http\Controllers\PublicController;
@@ -34,17 +33,20 @@ class ServiceProvider extends AddonServiceProvider
 
         $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'localize');
 
-        $this->ensureFiles();
+        $this->publishes([
+            __DIR__.'/../config/localize.php' => config_path('localize.php'),
+        ], 'localize-config');
+
         $this->bootAddonPermissions();
-        $this->registerRoutes();
         $this->bootAddonNav();
+        $this->registerRoutes();
 
     }
 
     protected function ensureFiles()
     {
         Site::all()->each(function ($site) {
-            $filePath = base_path("content/localize/{$site->handle()}.json");
+            $filePath = base_path(config('localize.folder')."/{$site->handle()}.json");
             File::ensureDirectoryExists(dirname($filePath));
             if (! File::exists($filePath)) {
                 File::put($filePath, '{}');
@@ -62,18 +64,24 @@ class ServiceProvider extends AddonServiceProvider
     protected function bootAddonNav()
     {
         Nav::extend(function ($nav) {
-            $user = User::current();
-            if ($user->can('edit localize')) {
-                $nav->content('Localize')
-                    ->route('localize.dashboard')
-                    ->icon('partial');
-            }
+            $nav->content('Localize')
+                ->route('localize.dashboard')
+                ->icon('partial')
+                ->can('edit localize');
         });
     }
 
     protected function registerRoutes()
     {
-        Route::prefix('api/localize')->group(function () {
+        if (config('localize.api_disabled')) {
+            return false;
+        }
+
+        if (! config('statamic.api.enabled') || ! config('statamic.graphql.enabled')) {
+            return false;
+        }
+
+        Route::prefix(config('localize.route'))->group(function () {
             Site::all()->each(fn ($site) => Route::get(
                 $site->handle(),
                 [PublicController::class, 'serve']

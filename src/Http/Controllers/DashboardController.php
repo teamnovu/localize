@@ -18,13 +18,15 @@ class DashboardController
 
     public function update(Request $request)
     {
-        collect($request->input('translations'))->each(function (array $translation, string $key) {
+        Site::all()->each(function (string $key) use ($request) {
 
-            // middleware ConvertEmptyStringsToNull will convert empty strings to null
-            // we need empty strings to be empty strings
-            array_walk_recursive($translation, function (&$item) {$item = strval($item); });
+            $translation = $request->input('translations')[$key];
 
-            $filePath = base_path("content/localize/{$key}.json");
+            if (empty($translation)) {
+                return;
+            }
+
+            $filePath = base_path(config('localize.folder')."/{$key}.json");
             $original = json_decode(File::get($filePath), true);
 
             $updated = array_replace_recursive($original, $translation);
@@ -47,7 +49,10 @@ class DashboardController
         return Site::all()->map(fn ($site) => [
             'handle' => $site->handle(),
             'name' => $site->name(),
-            'translations' => json_decode(File::get(base_path("content/localize/{$site->handle()}.json")), true),
+            'translations' => json_decode(
+                File::get(base_path(config('localize.folder')."/{$site->handle()}.json")),
+                true
+            ),
         ]);
     }
 }

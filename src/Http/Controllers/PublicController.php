@@ -9,9 +9,7 @@ class PublicController extends Controller
     public function serve()
     {
         $site = \Request::segment(3);
-        $filePath = base_path("content/localize/{$site}.json");
-
-        // ToDo: compress json file
+        $filePath = base_path(config('localize.folder')."/{$site}.json");
 
         return response()->file($filePath);
     }
