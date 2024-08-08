@@ -14,8 +14,7 @@
         <div v-for="value, first of objects" :key="first" class="card p-6 content novu-mb-6 form-group">
             <h2 class="mb-3">{{ deslug(first) }}</h2>
             <template v-for="secondValue, second of value">
-                <Entry v-if="typeof secondValue === 'string'" :name="second" :value="secondValue" :path="[first]"
-                    class="px-0" />
+                <Entry v-if="inputType(secondValue)" :name="second" :value="secondValue" :path="[first]" class="px-0" />
                 <Group v-else :name="second" :value="secondValue" :path="[first]" parent />
             </template>
         </div>
@@ -30,7 +29,7 @@
 <script>
 import Entry from './Entry.vue'
 import Group from './Group.vue'
-import { deslug } from '../utils'
+import { deslug, inputType } from '../utils'
 export default {
 
     components: {
@@ -57,13 +56,13 @@ export default {
         },
         strings() {
             return Object.entries(this.translations).reduce((acc, [key, value]) => {
-                if (typeof value === 'string') acc[key] = value
+                if (inputType(value)) acc[key] = value
                 return acc
             }, {})
         },
         objects() {
             return Object.entries(this.translations).reduce((acc, [key, value]) => {
-                if (typeof value !== 'string') acc[key] = value
+                if (!inputType(value)) acc[key] = value
                 return acc
             }, {})
         }
@@ -88,6 +87,7 @@ export default {
 
     methods: {
         deslug,
+        inputType,
         save() {
             this.$axios({
                 method: "POST",

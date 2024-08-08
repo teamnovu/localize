@@ -100,7 +100,8 @@ __webpack_require__.r(__webpack_exports__);
     path: Array
   },
   methods: {
-    deslug: _utils__WEBPACK_IMPORTED_MODULE_1__.deslug
+    deslug: _utils__WEBPACK_IMPORTED_MODULE_1__.deslug,
+    inputType: _utils__WEBPACK_IMPORTED_MODULE_1__.inputType
   }
 });
 
@@ -153,7 +154,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         var _ref2 = _slicedToArray(_ref, 2),
           key = _ref2[0],
           value = _ref2[1];
-        if (typeof value === 'string') acc[key] = value;
+        if ((0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputType)(value)) acc[key] = value;
         return acc;
       }, {});
     },
@@ -162,7 +163,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
         var _ref4 = _slicedToArray(_ref3, 2),
           key = _ref4[0],
           value = _ref4[1];
-        if (typeof value !== 'string') acc[key] = value;
+        if (!(0,_utils__WEBPACK_IMPORTED_MODULE_2__.inputType)(value)) acc[key] = value;
         return acc;
       }, {});
     }
@@ -182,6 +183,7 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
   },
   methods: {
     deslug: _utils__WEBPACK_IMPORTED_MODULE_2__.deslug,
+    inputType: _utils__WEBPACK_IMPORTED_MODULE_2__.inputType,
     save: function save() {
       var _this2 = this;
       this.$axios({
@@ -357,7 +359,7 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
 var render = function render() {
   var _vm = this,
     _c = _vm._self._c;
-  return typeof _vm.value === "string" ? _c("Entry", {
+  return _vm.inputType(_vm.value) ? _c("Entry", {
     staticClass: "pl-3 novu-pr-0",
     attrs: {
       name: _vm.name,
@@ -437,7 +439,7 @@ var render = function render() {
     }, [_c("h2", {
       staticClass: "mb-3"
     }, [_vm._v(_vm._s(_vm.deslug(first)))]), _vm._v(" "), _vm._l(value, function (secondValue, second) {
-      return [typeof secondValue === "string" ? _c("Entry", {
+      return [_vm.inputType(secondValue) ? _c("Entry", {
         staticClass: "px-0",
         attrs: {
           name: second,
@@ -543,11 +545,18 @@ Statamic.$components.register("localize-list", _components_LocalizeList__WEBPACK
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   deslug: () => (/* binding */ deslug),
+/* harmony export */   inputType: () => (/* binding */ inputType),
 /* harmony export */   walkObject: () => (/* binding */ walkObject)
 /* harmony export */ });
 function _createForOfIteratorHelper(r, e) { var t = "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"]; if (!t) { if (Array.isArray(r) || (t = _unsupportedIterableToArray(r)) || e && r && "number" == typeof r.length) { t && (r = t); var _n = 0, F = function F() {}; return { s: F, n: function n() { return _n >= r.length ? { done: !0 } : { done: !1, value: r[_n++] }; }, e: function e(r) { throw r; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var o, a = !0, u = !1; return { s: function s() { t = t.call(r); }, n: function n() { var r = t.next(); return a = r.done, r; }, e: function e(r) { u = !0, o = r; }, f: function f() { try { a || null == t["return"] || t["return"](); } finally { if (u) throw o; } } }; }
 function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
 function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
+function inputType(value) {
+  if (value === null) return true;
+  if (typeof value === 'string') return true;
+  if (typeof value === 'number') return true;
+  return false;
+}
 function deslug() {
   var string = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
   if (typeof string !== 'string') {

@@ -1,3 +1,10 @@
+export function inputType(value) {
+    if (value === null) return true;
+    if (typeof value === 'string') return true;
+    if (typeof value === 'number') return true;
+    return false;
+}
+
 export function deslug(string = '') {
     if (typeof string !== 'string') {
         return string;
