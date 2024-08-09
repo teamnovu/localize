@@ -10,6 +10,7 @@ use Statamic\Facades\Site;
 use Statamic\Providers\AddonServiceProvider;
 use Statamic\Statamic;
 use Teamnovu\Localize\Http\Controllers\PublicController;
+use Teamnovu\Localize\Services\LangFileService;
 
 class ServiceProvider extends AddonServiceProvider
 {
@@ -46,10 +47,10 @@ class ServiceProvider extends AddonServiceProvider
     protected function ensureFiles()
     {
         Site::all()->each(function ($site) {
-            $filePath = base_path(config('localize.folder')."/{$site->handle()}.json");
-            File::ensureDirectoryExists(dirname($filePath));
-            if (! File::exists($filePath)) {
-                File::put($filePath, '{}');
+            $path = LangFileService::path($site->handle());
+            File::ensureDirectoryExists(dirname($path));
+            if (! File::exists($path)) {
+                File::put($path, '{}');
             }
         });
     }

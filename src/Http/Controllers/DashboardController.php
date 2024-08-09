@@ -3,8 +3,8 @@
 namespace Teamnovu\Localize\Http\Controllers;
 
 use Statamic\Facades\Site;
-use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
+use Teamnovu\Localize\Services\LangFileService;
 
 class DashboardController
 {
@@ -20,22 +20,17 @@ class DashboardController
     {
         Site::all()->each(function (string $key) use ($request) {
 
-            $translation = $request->input('translations')[$key];
+            $translation = $request->input('translations');
 
-            if (empty($translation)) {
+            if (empty($translation) || empty($translation[$key])) {
                 return;
             }
 
-            $filePath = base_path(config('localize.folder')."/{$key}.json");
-            $original = json_decode(File::get($filePath), true);
+            $original = LangFileService::get($key);
 
-            $updated = array_replace_recursive($original, $translation);
+            $updated = array_replace_recursive($original, $translation[$key]);
 
-            $updatedJson = json_encode(
-                $updated,
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-            );
-            File::put($filePath, $updatedJson);
+            LangFileService::put($key, $updated);
         });
 
         return response()->json([
@@ -49,10 +44,7 @@ class DashboardController
         return Site::all()->map(fn ($site) => [
             'handle' => $site->handle(),
             'name' => $site->name(),
-            'translations' => json_decode(
-                File::get(base_path(config('localize.folder')."/{$site->handle()}.json")),
-                true
-            ),
+            'translations' => LangFileService::get($site->handle()),
         ]);
     }
 }
