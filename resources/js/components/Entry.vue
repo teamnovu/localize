@@ -2,7 +2,7 @@
     <div class="form-group flex gap-3 py-1 [.section+&]:novu-mt-6 novu-flex-wrap">
         <!-- label -->
         <div class="field-inner truncate w-full md:novu-w-[15rem] mt-2">
-            <label :for="formName" class="publish-field-label" v-tooltip="deslug(name)">
+            <label :for="formName" class="publish-field-label" v-tooltip="pathName">
                 {{ deslug(name) }}
             </label>
         </div>
@@ -60,6 +60,9 @@ export default {
     computed: {
         formName() {
             return 'translations' + [this.site, ...this.path, this.name].map(s => `[${s}]`).join('')
+        },
+        pathName() {
+            return [...this.path, this.name].join('.')
         },
         alternatives() {
             return Object.values(this.sites)

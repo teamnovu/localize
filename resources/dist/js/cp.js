@@ -44,6 +44,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
         return "[".concat(s, "]");
       }).join('');
     },
+    pathName: function pathName() {
+      return [].concat(_toConsumableArray(this.path), [this.name]).join('.');
+    },
     alternatives: function alternatives() {
       var _this = this;
       return Object.values(this.sites).filter(function (alt) {
@@ -277,8 +280,8 @@ var render = function render() {
     directives: [{
       name: "tooltip",
       rawName: "v-tooltip",
-      value: _vm.deslug(_vm.name),
-      expression: "deslug(name)"
+      value: _vm.pathName,
+      expression: "pathName"
     }],
     staticClass: "publish-field-label",
     attrs: {
@@ -420,8 +423,8 @@ var render = function render() {
     domProps: {
       innerHTML: _vm._s(_vm.__("localize::general.intro"))
     }
-  })]), _vm._v(" "), Object.keys(_vm.strings).length ? _c("div", {
-    staticClass: "card p-6 content novu-mb-6 form-group"
+  })]), _vm._v(" "), Object.keys(_vm.strings).length ? _c("section", {
+    staticClass: "card py-5 px-6 content novu-mb-6 form-group"
   }, _vm._l(_vm.strings, function (value, first) {
     return _c("Entry", {
       key: first,
@@ -433,12 +436,18 @@ var render = function render() {
       }
     });
   }), 1) : _vm._e(), _vm._v(" "), _vm._l(_vm.objects, function (value, first) {
-    return _c("div", {
+    return _c("section", {
       key: first,
-      staticClass: "card p-6 content novu-mb-6 form-group"
+      staticClass: "card p-0 content novu-mb-6 form-group"
+    }, [_c("header", {
+      staticClass: "publish-section-header @container"
+    }, [_c("div", {
+      staticClass: "publish-section-header-inner"
     }, [_c("h2", {
-      staticClass: "mb-3"
-    }, [_vm._v(_vm._s(_vm.deslug(first)))]), _vm._v(" "), _vm._l(value, function (secondValue, second) {
+      staticClass: "text-base font-semibold mb-1"
+    }, [_vm._v(_vm._s(_vm.deslug(first)))])])]), _vm._v(" "), _c("div", {
+      staticClass: "py-5 px-6"
+    }, [_vm._l(value, function (secondValue, second) {
       return [_vm.inputType(secondValue) ? _c("Entry", {
         staticClass: "px-0",
         attrs: {
@@ -447,6 +456,7 @@ var render = function render() {
           path: [first]
         }
       }) : _c("Group", {
+        staticClass: "novu-mb-1",
         attrs: {
           name: second,
           value: secondValue,
@@ -454,8 +464,8 @@ var render = function render() {
           parent: ""
         }
       })];
-    })], 2);
-  }), _vm._v(" "), Object.values(_vm.translations).length === 0 ? _c("div", {
+    })], 2)]);
+  }), _vm._v(" "), Object.values(_vm.translations).length === 0 ? _c("section", {
     staticClass: "card p-6 content"
   }, [_c("p", [_vm._v(_vm._s(_vm.__("localize::general.no_content")))])]) : _vm._e()], 2);
 };
