@@ -16,3 +16,13 @@ You can search for this addon in the `Tools > Addons` section of the Statamic co
 ``` bash
 composer require teamnovu/localize
 ```
+
+If you're using the Git integration you and want to track the used lang files,
+add to `config/statamic/git.php` the following path:
+
+```php
+'paths' => [
+    // ...
+    base_path('lang'),
+],
+```
