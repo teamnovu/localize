@@ -59,7 +59,23 @@ export default {
 
     computed: {
         translations() {
-            return this.trackedSites[this.site].translations
+            const createEmptyTranslationKeys = (obj1, obj2) => {
+                for (let key in obj2) {
+                    if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
+                        if (obj2[key] instanceof Object) {
+                            obj1[key] = {}
+                            obj1[key] = createEmptyTranslationKeys(obj1[key], obj2[key])
+                        } else {
+                            obj1[key] = ''
+                        }
+                    }
+                }
+                return obj1;
+            }
+            const otherSites = Object.keys(this.trackedSites).filter(x => x !== this.site)
+            let result = this.trackedSites[this.site].translations
+            otherSites.forEach((s) => {result = createEmptyTranslationKeys(result, this.trackedSites[s].translations)})
+            return result
         },
         strings() {
             return Object.entries(this.translations).reduce((acc, [key, value]) => {
