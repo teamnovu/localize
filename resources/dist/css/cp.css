@@ -1,14 +1,23 @@
 .novu-pointer-events-none {
     pointer-events: none !important
 }
+.novu-right-0 {
+    right: 0px !important
+}
 .novu-right-3 {
     right: 0.75rem !important
+}
+.novu-z-10 {
+    z-index: 10 !important
 }
 .novu-float-right {
     float: right !important
 }
 .novu-m-\[0_-2px_-2px_0\] {
     margin: 0 -2px -2px 0 !important
+}
+.novu-mb-1 {
+    margin-bottom: 0.25rem !important
 }
 .novu-mb-6 {
     margin-bottom: 1.5rem !important
@@ -19,11 +28,11 @@
 .novu-mt-\[0\.4rem\] {
     margin-top: 0.4rem !important
 }
-.novu-mb-2 {
-    margin-bottom: 0.5rem !important
+.novu-flex {
+    display: flex !important
 }
-.novu-mb-1 {
-    margin-bottom: 0.25rem !important
+.novu-h-full {
+    height: 100% !important
 }
 .novu-w-\[2\.5rem\] {
     width: 2.5rem !important
@@ -44,6 +53,12 @@
 .novu-items-center {
     align-items: center !important
 }
+.novu-justify-center {
+    justify-content: center !important
+}
+.novu-gap-2 {
+    gap: 0.5rem !important
+}
 .novu-overflow-hidden {
     overflow: hidden !important
 }
@@ -58,16 +73,29 @@
     padding-left: 0.75rem !important;
     padding-right: 0.75rem !important
 }
+.novu-py-3 {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important
+}
 .novu-pr-0 {
     padding-right: 0px !important
 }
+.novu-pr-6 {
+    padding-right: 1.5rem !important
+}
 .novu-pr-\[2px\] {
     padding-right: 2px !important
+}
+.novu-opacity-60 {
+    opacity: 0.6 !important
 }
 .novu-transition-all {
     transition-property: all !important;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
     transition-duration: 150ms !important
+}
+.hover\:novu-opacity-100:hover {
+    opacity: 1 !important
 }
 @media (min-width: 768px) {
     .md\:novu-w-\[15rem\] {

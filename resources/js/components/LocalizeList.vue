@@ -106,6 +106,21 @@ export default {
                 this.save()
             }
         )
+    // :(
+    setTimeout(() => {
+        let hash = window.location.hash
+        if (hash) {
+            const el =  document.querySelector(`${hash}`)
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+                el.classList.add('scrolltoandblink')
+
+                setTimeout(() => {
+                el.classList.remove('scrolltoandblink')
+                }, 7000)
+            }
+        }
+    }, 700)
     },
 
     methods: {
@@ -141,3 +156,27 @@ export default {
     },
 }
 </script>
+
+<style>
+.scrolltoandblink {
+  animation-name: scrolltoandblink;
+  animation-duration: 0.4s;
+  /* animation-iteration-count: infinite; */
+  animation-iteration-count: 5;
+}
+@keyframes scrolltoandblink {
+  50% {
+    filter: brightness(2);
+
+  }
+  0%,
+  100% {
+    filter: brightness(1);
+
+  }
+}
+
+html, body {
+    scroll-margin-top: 100px;
+}
+</style>
