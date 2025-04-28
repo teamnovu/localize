@@ -204,7 +204,6 @@ function _arrayWithHoles(r) { if (Array.isArray(r)) return r; }
       e.preventDefault();
       _this2.save();
     });
-    // :(
     setTimeout(function () {
       var hash = window.location.hash;
       if (hash) {

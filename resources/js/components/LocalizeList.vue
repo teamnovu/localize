@@ -106,21 +106,20 @@ export default {
                 this.save()
             }
         )
-    // :(
-    setTimeout(() => {
-        let hash = window.location.hash
-        if (hash) {
-            const el =  document.querySelector(`${hash}`)
-            if (el) {
-                el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
-                el.classList.add('scrolltoandblink')
+        setTimeout(() => {
+            let hash = window.location.hash
+            if (hash) {
+                const el =  document.querySelector(`${hash}`)
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })
+                    el.classList.add('scrolltoandblink')
 
-                setTimeout(() => {
-                el.classList.remove('scrolltoandblink')
-                }, 7000)
+                    setTimeout(() => {
+                    el.classList.remove('scrolltoandblink')
+                    }, 7000)
+                }
             }
-        }
-    }, 700)
+        }, 700)
     },
 
     methods: {
