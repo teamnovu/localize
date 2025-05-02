@@ -1,25 +1,16 @@
 <template>
-
-        <div class="input-group">
-            <IconLink class="novu-h-full" />
-        </button>
-        <div class="input-group relative novu-flex novu-gap-2">
-            <input v-bind="$attrs" v-model.trim="trackedValue" :id="name" :name="name" class="input-text">
-        </div>
-
+    <div class="relative w-full">
+        <span v-if="isDirty" class="absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none novu-text-[rgb(67,169,255)]" aria-label="has changed">•</span>
+        <input v-bind="$attrs" v-model.trim="trackedValue" class="input-text">
     </div>
 </template>
 
 <script>
-import IconLink from './IconLink.vue'
 export default {
     inheritAttrs: false,
     props: {
         name: String,
         value: String,
-    },
-    components: {
-        IconLink
     },
     data() {
         return {
@@ -33,10 +24,6 @@ export default {
 
             return this.trackedValue != this.value
         },
-        linkId() {
-            return `${this.name }`.replaceAll('[', '-').replace(/[^a-zA-Z0-9-]/g, '')
-        },
-       
     },
     watch: {
         isDirty(isDirty) {
@@ -44,17 +31,5 @@ export default {
             else this.$dirty.remove(this.name);
         }
     },
-    methods: {
-        copyToClipboard() {
-            const currentUrl = location.protocol + '//' + location.host + location.pathname
-            
-            navigator.clipboard.writeText(currentUrl +'#' + this.linkId).then(function() {
-                // console.log('Async: Copying to clipboard was successful!');
-            }, function(err) {
-                console.error('Async: Could not copy text: ', err);
-            });
-
-        }
-    }
 }
 </script>
