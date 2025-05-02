@@ -570,6 +570,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: "checkbox"
     },
     domProps: {
@@ -602,6 +603,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: "radio"
     },
     domProps: {
@@ -621,6 +623,7 @@ var render = function render() {
     }],
     staticClass: "input-text",
     attrs: {
+      name: _vm.name,
       type: _vm.$attrs.type
     },
     domProps: {
