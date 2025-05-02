@@ -117,28 +117,31 @@ export default {
                 const el = document.getElementById(window.location.hash.substring(1))
                 if (!el) return
 
-                el.scrollIntoView({ behavior: 'smooth', block: 'center' })
                 el.closest('[blink-target]').classList.add('blink')
-                setTimeout(() => el.focus(), 100)
-            }, 300)
+                el.focus()
+            }, 10)
         }
     }
 }
 </script>
 
 <style>
+html {
+    scroll-padding-top: 20vh;
+}
+
 .blink {
-  animation-name: blink;
-  animation-duration: 0.8s;
-  animation-iteration-count: 3;
+    animation-name: blink;
+    animation-duration: 0.8s;
+    animation-iteration-count: 3;
 }
 @keyframes blink {
-  50% {
-    opacity: 0.5;
-  }
-  0%,
-  100% {
-    opacity: 1;
-  }
+    50% {
+      opacity: 0.5;
+    }
+    0%,
+    100% {
+      opacity: 1;
+    }
 }
 </style>

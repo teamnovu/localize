@@ -91,15 +91,9 @@ function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length)
       setTimeout(function () {
         var el = document.getElementById(window.location.hash.substring(1));
         if (!el) return;
-        el.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center'
-        });
         el.closest('[blink-target]').classList.add('blink');
-        setTimeout(function () {
-          return el.focus();
-        }, 100);
-      }, 300);
+        el.focus();
+      }, 10);
     }
   }
 });
@@ -731,7 +725,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.blink {\n  animation-name: blink;\n  animation-duration: 0.8s;\n  animation-iteration-count: 3;\n}\n@keyframes blink {\n50% {\n    opacity: 0.5;\n}\n0%,\n  100% {\n    opacity: 1;\n}\n}\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\nhtml {\n    scroll-padding-top: 20vh;\n}\n.blink {\n    animation-name: blink;\n    animation-duration: 0.8s;\n    animation-iteration-count: 3;\n}\n@keyframes blink {\n50% {\n      opacity: 0.5;\n}\n0%,\n    100% {\n      opacity: 1;\n}\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
