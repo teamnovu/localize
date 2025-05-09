@@ -10,6 +10,9 @@
 .novu-m-\[0_-2px_-2px_0\] {
     margin: 0 -2px -2px 0 !important
 }
+.novu-mb-1 {
+    margin-bottom: 0.25rem !important
+}
 .novu-mb-6 {
     margin-bottom: 1.5rem !important
 }
@@ -18,12 +21,6 @@
 }
 .novu-mt-\[0\.4rem\] {
     margin-top: 0.4rem !important
-}
-.novu-mb-2 {
-    margin-bottom: 0.5rem !important
-}
-.novu-mb-1 {
-    margin-bottom: 0.25rem !important
 }
 .novu-w-\[2\.5rem\] {
     width: 2.5rem !important
@@ -63,6 +60,10 @@
 }
 .novu-pr-\[2px\] {
     padding-right: 2px !important
+}
+.novu-text-\[rgb\(67\,169\,255\)\] {
+    --tw-text-opacity: 1 !important;
+    color: rgb(67 169 255 / var(--tw-text-opacity)) !important
 }
 .novu-transition-all {
     transition-property: all !important;
