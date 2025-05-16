@@ -1,7 +1,7 @@
 {
     "name": "teamnovu/localize",
     "description": "Localize allows you to easily translate i18n files within Statamic",
-    "license": "proprietary",
+    "license": "MIT",
     "autoload": {
         "psr-4": {
             "Teamnovu\\Localize\\": "src"
@@ -14,7 +14,8 @@
     },
     "authors": [
         {
-            "name": "Patrick Stillhart"
+            "name": "Patrick Stillhart",
+            "email": "patrick@stillh.art"
         }
     ],
     "require": {
@@ -40,6 +41,5 @@
             ]
         }
     },
-    "minimum-stability": "dev",
     "prefer-stable": true
 }
