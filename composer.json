@@ -16,11 +16,15 @@
         {
             "name": "Patrick Stillhart",
             "email": "patrick@stillh.art"
+        },
+        {
+            "name": "Janis Wanger",
+            "email": "janis@wanger.be"
         }
     ],
     "require": {
-        "php": "^8.2",
-        "statamic/cms": "^5.0"
+        "php": "^8.5",
+        "statamic/cms": "^6.0"
     },
     "require-dev": {
         "orchestra/testbench": "^9.0"
