@@ -37,6 +37,10 @@
             "providers": [
                 "Teamnovu\\Localize\\ServiceProvider"
             ]
+        },
+        "download-dist": {
+            "url": "https://github.com/teamnovu/localize/releases/download/{$version}/dist.tar.gz",
+            "path": "resources/dist"
         }
     },
     "minimum-stability": "dev",
