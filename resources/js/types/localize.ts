@@ -1,5 +1,5 @@
 /** Leaf values stored in translation JSON */
-export type TranslationScalar = string | number | null
+export type TranslationScalar = string | null
 
 /** Nested key/value translation structure */
 export type TranslationTree = {

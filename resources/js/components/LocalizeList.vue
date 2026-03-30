@@ -37,9 +37,15 @@
 import { computed, onBeforeUnmount, onMounted, provide, ref, toRef } from 'vue'
 import Entry from './Entry.vue'
 import Group from './Group.vue'
-import { deslug, inputType, readXsrfToken } from '../utils'
+import { deslug, inputType, readXsrfToken, sanitizeSitesMap } from '../utils'
 import { siteKey, sitesKey } from '../injectionKeys'
-import { isSaveSuccess, isValidationError, type SitesMap, type TranslationTree } from '../types/localize'
+import {
+    isSaveSuccess,
+    isValidationError,
+    type SitesMap,
+    type TranslationScalar,
+    type TranslationTree,
+} from '../types/localize'
 
 const props = defineProps<{
     site: string
@@ -75,18 +81,20 @@ const translations = computed(() => {
     return result
 })
 
-const strings = computed(() => {
-    return Object.entries(translations.value).reduce<Record<string, string | number | null>>((acc, [key, value]) => {
-        if (inputType(value)) acc[key] = value
-        return acc
-    }, {})
-})
-
 const objects = computed(() => {
-    return Object.entries(translations.value).reduce<Record<string, TranslationTree>>((acc, [key, value]) => {
+    const result = Object.entries(translations.value).reduce<Record<string, TranslationTree>>((acc, [key, value]) => {
         if (!inputType(value)) acc[key] = value as TranslationTree
         return acc
     }, {})
+
+    const looseStrings = Object.entries(translations.value).reduce<Record<string, TranslationScalar>>((acc, [key, value]) => {
+        if (inputType(value)) acc[key] = value
+        return acc
+    }, {})
+
+    result['__rootNodes'] = looseStrings
+
+    return result
 })
 
 provide(siteKey, toRef(props, 'site'))
@@ -125,7 +133,12 @@ async function save() {
     const ct = response.headers.get('content-type') ?? ''
     if (ct.includes('application/json')) {
         try {
-            data = await response.json()
+            const text = await response.text()
+            const parsed: unknown = JSON.parse(text)
+            if (isSaveSuccess(parsed)) {
+                parsed.sites = sanitizeSitesMap(parsed.sites)
+            }
+            data = parsed
         } catch {
             data = null
         }

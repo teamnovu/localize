@@ -1,10 +1,35 @@
-import type { TranslationScalar, TranslationTree } from './types/localize'
+import type { SitesMap, TranslationScalar, TranslationTree } from './types/localize'
 
 export function inputType(value: unknown): value is TranslationScalar {
     if (value === null) return true
     if (typeof value === 'string') return true
-    if (typeof value === 'number') return true
     return false
+}
+
+/** Recursively coerce numeric JSON leaves to strings (translation content is string-only). */
+export function sanitizeTranslationTree(tree: TranslationTree): TranslationTree {
+    const out: TranslationTree = {}
+    for (const [key, value] of Object.entries(tree)) {
+        if (value === null || typeof value === 'string') {
+            out[key] = value
+        } else if (typeof value === 'number') {
+            out[key] = String(value)
+        } else if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+            out[key] = sanitizeTranslationTree(value as TranslationTree)
+        }
+    }
+    return out
+}
+
+export function sanitizeSitesMap(sites: SitesMap): SitesMap {
+    const out: SitesMap = {}
+    for (const [handle, site] of Object.entries(sites)) {
+        out[handle] = {
+            ...site,
+            translations: sanitizeTranslationTree(site.translations),
+        }
+    }
+    return out
 }
 
 export function deslug(string: string | number = ''): string | number {

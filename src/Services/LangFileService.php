@@ -18,7 +18,33 @@ class LangFileService
             return [];
         }
 
-        return json_decode(File::get($path), true);
+        $data = json_decode(File::get($path), true);
+
+        if (! is_array($data)) {
+            return [];
+        }
+
+        return self::sanitizeTranslationTree($data);
+    }
+
+    /**
+     * Recursively coerce numeric leaves to strings (translation content is string-only).
+     */
+    private static function sanitizeTranslationTree(array $tree): array
+    {
+        $out = [];
+
+        foreach ($tree as $key => $value) {
+            if (is_array($value)) {
+                $out[$key] = self::sanitizeTranslationTree($value);
+            } elseif (is_int($value) || is_float($value)) {
+                $out[$key] = (string) $value;
+            } else {
+                $out[$key] = $value;
+            }
+        }
+
+        return $out;
     }
 
     public static function put(string $site, array $content): void
