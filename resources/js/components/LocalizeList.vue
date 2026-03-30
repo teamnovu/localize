@@ -1,34 +1,21 @@
 <template>
-    <form @submit.prevent="save" ref="form">
+    <form @submit.prevent="save" ref="form" class="space-y-4">
+        <ui-header :title="__('localize::general.title')">
+            <ui-button :text="__('Save')" variant="primary"></ui-button>
+        </ui-header>
+        <ui-alert :text="__('localize::general.intro')" />
 
-        <header class="mb-8">
-            <button class="float-right btn-primary">{{ __('Save') }}</button>
-            <h1>{{ __('localize::general.title') }}</h1>
-            <p v-html="__('localize::general.intro')"></p>
-        </header>
-
-        <section v-if="Object.keys(strings).length" class="card py-5 px-6 content mb-6 form-group">
-            <Entry v-for="(value, first) in strings" :key="first" :name="first" :value="value" :path="[]" class="px-0" />
-        </section>
-
-        <section v-for="(value, first) in objects" :key="first" class="card p-0 content mb-6 form-group">
-            <header class="publish-section-header @container">
-                <div class="publish-section-header-inner">
-                    <h2 class="text-base font-semibold mb-1">{{ deslug(first) }}</h2>
-                </div>
-            </header>
-            <div class="py-5 px-6">
+        <ui-panel v-for="(value, first) in objects" :key="first" :heading="first === '__rootNodes' ? __('localize::general.strings') : deslug(first)">
+            <ui-card>
                 <template v-for="(secondValue, second) in value">
-                    <Entry v-if="inputType(secondValue)" :name="second" :value="secondValue" :path="[first]"
+                    <Entry v-if="inputType(secondValue)" :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]"
                         class="px-0" />
-                    <Group v-else :name="second" :value="secondValue" :path="[first]" parent class="mb-1" />
+                    <Group v-else :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" parent class="mb-1" />
                 </template>
-            </div>
-        </section>
+            </ui-card>
+        </ui-panel>
 
-        <section v-if="Object.values(translations).length === 0" class="card p-6 content">
-            <p>{{ __('localize::general.no_content') }}</p>
-        </section>
+        <ui-alert v-if="Object.values(translations).length === 0" :text="__('localize::general.no_content')" variant="warning" />
 
     </form>
 </template>
@@ -92,7 +79,9 @@ const objects = computed(() => {
         return acc
     }, {})
 
-    result['__rootNodes'] = looseStrings
+    if (Object.keys(looseStrings).length) {
+        result['__rootNodes'] = looseStrings
+    }
 
     return result
 })
