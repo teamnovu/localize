@@ -1,0 +1,1 @@
+html{scroll-padding-top:20vh}.blink{animation-name:blink;animation-duration:.8s;animation-iteration-count:3}@keyframes blink{50%{opacity:.5}0%,to{opacity:1}}

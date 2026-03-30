@@ -18,8 +18,9 @@ class DashboardController
 
     public function update(Request $request)
     {
-        Site::all()->each(function (string $key) use ($request) {
+        Site::all()->each(function ($site) use ($request) {
 
+            $key = $site->handle();
             $translation = $request->input('translations');
 
             if (empty($translation) || empty($translation[$key])) {

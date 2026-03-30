@@ -19,7 +19,7 @@ class ServiceProvider extends AddonServiceProvider
     ];
 
     protected $stylesheets = [
-        __DIR__.'/../resources/dist/css/cp.css',
+        __DIR__.'/../resources/dist/style.css',
     ];
 
     protected $routes = [
@@ -79,7 +79,11 @@ class ServiceProvider extends AddonServiceProvider
             return false;
         }
 
-        if (! config('statamic.api.enabled') && ! config('statamic.graphql.enabled')) {
+        // statamic.graphql.enabled was removed in Statamic 6 (GraphQL moved out of core).
+        // Fall back to false so the check still works correctly on both v5 and v6.
+        $graphqlEnabled = config('statamic.graphql.enabled', false);
+
+        if (! config('statamic.api.enabled') && ! $graphqlEnabled) {
             return false;
         }
 
