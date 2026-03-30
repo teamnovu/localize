@@ -7,13 +7,15 @@
 
 <script setup lang="ts">
 import { computed, ref, watch } from 'vue'
+import type { TranslationScalar } from '../types/localize'
 
 defineOptions({ inheritAttrs: false })
 
-const props = defineProps({
-    name: String,
-    value: String,
-})
+const props = defineProps<{
+    name: string
+    value: TranslationScalar
+}>()
+
 
 const trackedValue = ref(props.value)
 

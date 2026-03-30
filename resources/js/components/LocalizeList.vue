@@ -37,30 +37,27 @@
 import { computed, onBeforeUnmount, onMounted, provide, ref, toRef } from 'vue'
 import Entry from './Entry.vue'
 import Group from './Group.vue'
-import { deslug, inputType } from '../utils'
+import { deslug, inputType, readXsrfToken } from '../utils'
+import { siteKey, sitesKey } from '../injectionKeys'
+import { isSaveSuccess, isValidationError, type SitesMap, type TranslationTree } from '../types/localize'
 
-function readXsrfToken() {
-    const row = document.cookie.split('; ').find((r) => r.startsWith('XSRF-TOKEN='))
-    if (!row) return null
-    return decodeURIComponent(row.slice('XSRF-TOKEN='.length))
-}
+const props = defineProps<{
+    site: string
+    sites: SitesMap
+    action: string
+}>()
 
-const props = defineProps({
-    site: String,
-    sites: Object,
-    action: String,
-})
+const form = ref<HTMLFormElement | null>(null)
+const trackedSites = ref<SitesMap>(props.sites)
+const saveKeyBinding = ref<{ destroy: () => void } | null>(null)
 
-const form = ref(null)
-const trackedSites = ref(props.sites)
-const saveKeyBinding = ref(null)
-
-function createEmptyTranslationKeys(obj1, obj2) {
+function createEmptyTranslationKeys(obj1: TranslationTree, obj2: TranslationTree): TranslationTree {
     for (const key in obj2) {
         if (Object.prototype.hasOwnProperty.call(obj2, key) && !Object.prototype.hasOwnProperty.call(obj1, key)) {
-            if (obj2[key] instanceof Object) {
-                obj1[key] = {}
-                obj1[key] = createEmptyTranslationKeys(obj1[key], obj2[key])
+            const v = obj2[key]
+            if (v !== null && typeof v === 'object') {
+                const next = (obj1[key] as TranslationTree | undefined) ?? {}
+                obj1[key] = createEmptyTranslationKeys(next, v as TranslationTree)
             } else {
                 obj1[key] = ''
             }
@@ -79,27 +76,29 @@ const translations = computed(() => {
 })
 
 const strings = computed(() => {
-    return Object.entries(translations.value).reduce((acc, [key, value]) => {
+    return Object.entries(translations.value).reduce<Record<string, string | number | null>>((acc, [key, value]) => {
         if (inputType(value)) acc[key] = value
         return acc
     }, {})
 })
 
 const objects = computed(() => {
-    return Object.entries(translations.value).reduce((acc, [key, value]) => {
-        if (!inputType(value)) acc[key] = value
+    return Object.entries(translations.value).reduce<Record<string, TranslationTree>>((acc, [key, value]) => {
+        if (!inputType(value)) acc[key] = value as TranslationTree
         return acc
     }, {})
 })
 
-provide('site', toRef(props, 'site'))
-provide('sites', trackedSites)
+provide(siteKey, toRef(props, 'site'))
+provide(sitesKey, trackedSites)
+
+
 
 async function save() {
     const formEl = form.value
     if (!formEl) return
 
-    const headers = {
+    const headers: Record<string, string> = {
         Accept: 'application/json',
         'X-Requested-With': 'XMLHttpRequest',
     }
@@ -108,7 +107,7 @@ async function save() {
         headers['X-XSRF-TOKEN'] = xsrf
     }
 
-    let response
+    let response: Response
     try {
         response = await fetch(props.action, {
             method: 'POST',
@@ -116,12 +115,13 @@ async function save() {
             credentials: 'same-origin',
             headers,
         })
-    } catch (e) {
-        Statamic.$toast.error(e?.message ?? 'Something went wrong')
+    } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Something went wrong'
+        Statamic.$toast.error(message)
         return
     }
 
-    let data = null
+    let data: unknown = null
     const ct = response.headers.get('content-type') ?? ''
     if (ct.includes('application/json')) {
         try {
@@ -132,10 +132,10 @@ async function save() {
     }
 
     if (!response.ok) {
-        if (response.status === 422 && data) {
+        if (response.status === 422 && isValidationError(data)) {
             console.error(data.errors)
             Statamic.$toast.error(data.message)
-        } else if (data?.message) {
+        } else if (isValidationError(data)) {
             Statamic.$toast.error(data.message)
         } else {
             Statamic.$toast.error('Something went wrong')
@@ -143,7 +143,7 @@ async function save() {
         return
     }
 
-    if (!data) {
+    if (!isSaveSuccess(data)) {
         Statamic.$toast.error('Something went wrong')
         return
     }
@@ -157,7 +157,7 @@ onMounted(() => {
         ['mod+s', 'mod+return'],
         (e) => {
             e.preventDefault()
-            save()
+            void save()
         },
     )
 })

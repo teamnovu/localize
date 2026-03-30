@@ -12,7 +12,7 @@
         <div class="flex gap-4 flex-col grow">
             <!-- main input -->
             <div class="flex gap-2">
-                <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="value" />
+                <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="String(value ?? '')" />
                 <button v-if="altCount" class="btn px-3! w-10" type="button" @click="expanded">
                     <svg-icon name="translate" />
                 </button>
@@ -51,18 +51,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, inject, onMounted, ref, unref } from 'vue'
+import { computed, inject, onMounted, ref } from 'vue'
 import { deslug, walkObject } from '../utils'
+import { siteKey, sitesKey } from '../injectionKeys'
+import type { SiteConfig, TranslationScalar } from '../types/localize'
 import TrackedInput from './TrackedInput.vue'
 
-const props = defineProps({
-    name: String,
-    value: String,
-    path: Array,
-})
+const props = defineProps<{
+    name: string
+    value: TranslationScalar
+    path: string[]
+}>()
 
-const site = inject('site')
-const sites = inject('sites')
+const site = inject(siteKey)
+const sites = inject(sitesKey)
+
+if (site === undefined || sites === undefined) {
+    throw new Error('localize-list: missing site / sites provide()')
+}
 
 const details = ref(false)
 const grow = ref(false)
@@ -74,17 +80,16 @@ const formName = computed(() => {
 const pathName = computed(() => [...props.path, props.name].join('.'))
 
 const alternatives = computed(() => {
-    const sitesVal = unref(sites)
-    return Object.values(sitesVal)
-        .filter((alt) => alt.handle != site.value)
+    return (Object.values(sites.value) as SiteConfig[])
+        .filter((alt) => alt.handle !== site.value)
         .map((alt) => ({
             handle: alt.handle,
             name: alt.name,
-            value: walkObject(alt.translations, props.path, props.name),
+            value: walkObject(alt.translations, props.path, props.name) ?? null,
         }))
 })
 
-const altCount = computed(() => Object.keys(unref(sites)).length - 1)
+const altCount = computed(() => Object.keys(sites.value).length - 1)
 
 function expanded() {
     details.value = true
@@ -93,10 +98,16 @@ function expanded() {
     }, 10)
 }
 
-function setAnchor(e) {
+function setAnchor(e: MouseEvent) {
     e.preventDefault()
-    window.history.replaceState(window.history.state, '', e.target.href)
-    const input = document.getElementById(e.target.href.split('#')[1])
+    const anchor = e.currentTarget as HTMLAnchorElement | null
+    if (!anchor?.href) return
+
+    window.history.replaceState(window.history.state, '', anchor.href)
+    const id = anchor.href.split('#')[1]
+    if (!id) return
+
+    const input = document.getElementById(id)
     input?.focus()
 }
 
@@ -115,7 +126,7 @@ onMounted(() => {
             const el = document.getElementById(window.location.hash.substring(1))
             if (!el) return
 
-            el.closest('[blink-target]').classList.add('blink')
+            el.closest('[blink-target]')?.classList.add('blink')
             el.focus()
         }, 10)
     }

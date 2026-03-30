@@ -16,11 +16,12 @@
 import Entry from './Entry.vue'
 import Group from './Group.vue'
 import { deslug, inputType } from '../utils'
+import type { TranslationScalar, TranslationTree } from '../types/localize'
 
-defineProps({
-    parent: Boolean,
-    name: String,
-    value: Object,
-    path: Array,
-})
+defineProps<{
+    parent?: boolean
+    name: string
+    value: TranslationTree | TranslationScalar
+    path: string[]
+}>()
 </script>
