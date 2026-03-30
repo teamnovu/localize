@@ -1,52 +1,49 @@
 <template>
-    <div class="form-group flex gap-3 py-1 [.section+&]:mt-6 flex-wrap" blink-target>
-        <!-- label -->
-        <div class="field-inner truncate w-full md:w-60 mt-2">
-            <label :for="`${site}.${pathName}`" class="publish-field-label" v-tooltip="pathName">
-                <a :href="`#${site}.${pathName}`" @click="setAnchor">
-                    {{ deslug(name) }}
-                </a>
-            </label>
+    <ui-label :for="`${site}.${pathName}`" class="pt-2.5" v-tooltip="pathName" blink-target>
+        <a :href="`#${site}.${pathName}`" @click="setAnchor">
+            {{ deslug(name) }}
+        </a>
+    </ui-label>
+    <div>
+        <!-- main input -->
+        <div class="flex gap-2">
+            <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="String(value ?? '')" />
+            <ui-button v-if="altCount" type="button" :aria-label="__('localize::general.show_alternatives')" @click="toggle" icon="globe-world-wide-web" />
         </div>
 
-        <div class="flex gap-4 flex-col grow">
-            <!-- main input -->
-            <div class="flex gap-2">
-                <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="String(value ?? '')" />
-                <button v-if="altCount" class="btn px-3! w-10" type="button" @click="expanded">
-                    <svg-icon name="translate" />
-                </button>
-            </div>
-
-            <!-- alternatives -->
+        <!-- alternatives -->
+        <Transition
+            name="details"
+            enter-active-class="transition-[height] duration-500 ease-in-out overflow-hidden"
+            enter-from-class="h-0!"
+            enter-to-class="h-auto!"
+            leave-active-class="transition-[height] duration-500 ease-in-out overflow-hidden"
+            leave-from-class="h-auto!"
+            leave-to-class="h-0!"
+        >
             <div
                 v-if="details"
-                class="transition-all overflow-hidden m-[0_-2px_-2px_0]"
-                :style="{
-                    height: grow ? altCount * (38 + 8) + 2 + 'px' : 0
-                }"
             >
-                <div class="pt-2 flex gap-2 flex-col pr-[2px]">
-                    <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 items-center" blink-target>
-                        <div class="field-inner truncate w-32">
-                            <label
-                                :for="`${alt.handle}.${pathName}`"
-                                class="publish-field-label"
-                            >
-                                <a :href="`#${alt.handle}.${pathName}`" @click="setAnchor">
-                                    {{ alt.name }}
-                                </a>
-                            </label>
-                        </div>
+                <div class="h-4" :aria-hidden="true" />
+                <div class="grid grid-cols-[auto_1fr] gap-x-8 gap-y-2 items-center">
+                    <template v-for="alt of alternatives" :key="alt.handle">
+                        <label
+                            :for="`${alt.handle}.${pathName}`"
+                            class="truncate"
+                        >
+                            <a :href="`#${alt.handle}.${pathName}`" @click="setAnchor">
+                                {{ alt.name }}
+                            </a>
+                        </label>
                         <TrackedInput
                             :id="`${alt.handle}.${pathName}`"
                             :name="`${formName.replace(`translations[${site}]`, `translations[${alt.handle}]`)}`"
                             :value="alt.value"
                         />
-                    </div>
+                    </template>
                 </div>
             </div>
-        </div>
+        </Transition>
     </div>
 </template>
 
@@ -91,11 +88,8 @@ const alternatives = computed(() => {
 
 const altCount = computed(() => Object.keys(sites.value).length - 1)
 
-function expanded() {
-    details.value = true
-    setTimeout(() => {
-        grow.value = !grow.value
-    }, 10)
+function toggle() {
+    details.value = !details.value
 }
 
 function setAnchor(e: MouseEvent) {
@@ -128,16 +122,13 @@ onMounted(() => {
 
             el.closest('[blink-target]')?.classList.add('blink')
             el.focus()
+            details.value = true
         }, 10)
     }
 })
 </script>
 
 <style>
-html {
-    scroll-padding-top: 20vh;
-}
-
 .blink {
     animation-name: blink;
     animation-duration: 0.8s;
@@ -152,4 +143,9 @@ html {
       opacity: 1;
     }
 }
+
+:root {
+    interpolate-size: allow-keywords;
+}
+
 </style>

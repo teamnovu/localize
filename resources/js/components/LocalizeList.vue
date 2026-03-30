@@ -5,12 +5,11 @@
         </ui-header>
         <ui-alert :text="__('localize::general.intro')" />
 
-        <ui-panel v-for="(value, first) in objects" :key="first" :heading="first === '__rootNodes' ? __('localize::general.strings') : deslug(first)">
-            <ui-card>
+        <ui-panel v-for="(value, first) in objects" :key="first" :heading="first === '__rootNodes' ? __('localize::general.strings') : deslug(first)" class="max-w-4xl mx-auto">
+            <ui-card class="grid grid-cols-[auto_1fr] gap-4">
                 <template v-for="(secondValue, second) in value">
-                    <Entry v-if="inputType(secondValue)" :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]"
-                        class="px-0" />
-                    <Group v-else :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" parent class="mb-1" />
+                    <Entry v-if="inputType(secondValue)" :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" />
+                    <Group v-else :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" parent />
                 </template>
             </ui-card>
         </ui-panel>

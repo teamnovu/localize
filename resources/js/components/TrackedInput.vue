@@ -1,8 +1,13 @@
 <template>
-    <div class="relative w-full">
-        <span v-if="isDirty" class="absolute right-3 mt-[0.4rem] pointer-events-none text-[rgb(67,169,255)]" aria-label="has changed">•</span>
-        <input v-bind="$attrs" v-model="trackedValue" :name="name" class="input-text">
-    </div>
+    <ui-input
+        v-bind="$attrs"
+        v-model="trackedValue"
+        :name="name"
+    >
+        <template #append>
+            <ui-button v-if="isDirty" inset variant="ghost" icon="backspace" size="sm" class="mr-1" @click="trackedValue = value" />
+        </template>
+    </ui-input>
 </template>
 
 <script setup lang="ts">
@@ -23,7 +28,7 @@ const isDirty = computed(() => {
     // handle "<empty string>" in firefox
     if (!trackedValue.value && !props.value) return false
 
-    return trackedValue.value != props.value
+    return trackedValue.value !== props.value
 })
 
 watch(isDirty, (dirty) => {
