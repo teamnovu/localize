@@ -1,3 +1,5 @@
 node_modules
+resources/dist
 vendor
-mix-manifest.json
+composer.lock
+.phpunit.result.cache

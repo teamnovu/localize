@@ -1,6 +1,6 @@
 <template>
     <div class="relative w-full">
-        <span v-if="isDirty" class="absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none novu-text-[rgb(67,169,255)]" aria-label="has changed">•</span>
+        <span v-if="isDirty" class="absolute right-3 mt-[0.4rem] pointer-events-none text-[rgb(67,169,255)]" aria-label="has changed">•</span>
         <input v-bind="$attrs" v-model="trackedValue" :name="name" class="input-text">
     </div>
 </template>

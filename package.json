@@ -1,15 +1,16 @@
 {
-    "private": true,
-    "scripts": {
-        "dev": "npx mix watch",
-        "build": "npx mix --production"
-    },
-    "dependencies": {
-        "laravel-mix": "6.0.49",
-        "vue": "^2.7.14",
-        "vue-template-compiler": "2.7.16"
-    },
-    "devDependencies": {
-        "vue-loader": "15.11.1"
-    }
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@statamic/cms": "file:./vendor/statamic/cms/resources/dist-package",
+    "@tailwindcss/vite": "^4.2.2",
+    "tailwindcss": "^4.2.2"
+  },
+  "devDependencies": {
+    "laravel-vite-plugin": "^1.2.0",
+    "vite": "^6.3.4"
+  }
 }

@@ -2,16 +2,16 @@
     <form @submit.prevent="save" ref="form">
 
         <header class="mb-8">
-            <button class="novu-float-right btn-primary">{{ __('Save') }}</button>
+            <button class="float-right btn-primary">{{ __('Save') }}</button>
             <h1>{{ __('localize::general.title') }}</h1>
             <p v-html="__('localize::general.intro')"></p>
         </header>
 
-        <section v-if="Object.keys(strings).length" class="card py-5 px-6 content novu-mb-6 form-group">
+        <section v-if="Object.keys(strings).length" class="card py-5 px-6 content mb-6 form-group">
             <Entry v-for="value, first of strings" :key="first" :name="first" :value="value" :path="[]" class="px-0" />
         </section>
 
-        <section v-for="value, first of objects" :key="first" class="card p-0 content novu-mb-6 form-group">
+        <section v-for="value, first of objects" :key="first" class="card p-0 content mb-6 form-group">
             <header class="publish-section-header @container">
                 <div class="publish-section-header-inner">
                     <h2 class="text-base font-semibold mb-1">{{ deslug(first) }}</h2>
@@ -21,7 +21,7 @@
                 <template v-for="secondValue, second of value">
                     <Entry v-if="inputType(secondValue)" :name="second" :value="secondValue" :path="[first]"
                         class="px-0" />
-                    <Group v-else :name="second" :value="secondValue" :path="[first]" parent class="novu-mb-1" />
+                    <Group v-else :name="second" :value="secondValue" :path="[first]" parent class="mb-1" />
                 </template>
             </div>
         </section>

@@ -1,7 +1,7 @@
 <template>
-    <div class="form-group flex gap-3 py-1 [.section+&]:novu-mt-6 novu-flex-wrap" blink-target>
+    <div class="form-group flex gap-3 py-1 [.section+&]:mt-6 flex-wrap" blink-target>
         <!-- label -->
-        <div class="field-inner truncate w-full md:novu-w-[15rem] mt-2">
+        <div class="field-inner truncate w-full md:w-60 mt-2">
             <label :for="`${site}.${pathName}`" class="publish-field-label" v-tooltip="pathName">
                 <a :href="`#${site}.${pathName}`" @click="setAnchor">
                     {{ deslug(name) }}
@@ -9,11 +9,11 @@
             </label>
         </div>
 
-        <div class="flex gap-4 flex-col novu-grow">
+        <div class="flex gap-4 flex-col grow">
             <!-- main input -->
             <div class="flex gap-2">
                 <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="value" />
-                <button v-if="altCount" class="btn !novu-px-3 novu-w-[2.5rem]" type="button" @click="expanded">
+                <button v-if="altCount" class="btn px-3! w-10" type="button" @click="expanded">
                     <svg-icon name="translate" />
                 </button>
             </div>
@@ -21,14 +21,14 @@
             <!-- alternatives -->
             <div
                 v-if="details"
-                class="novu-transition-all novu-overflow-hidden novu-m-[0_-2px_-2px_0]"
+                class="transition-all overflow-hidden m-[0_-2px_-2px_0]"
                 :style="{
                     height: grow ? altCount * (38 + 8) + 2 + 'px' : 0
                 }"
             >
-                <div class="pt-2 flex gap-2 flex-col novu-pr-[2px]">
-                    <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 novu-items-center" blink-target>
-                        <div class="field-inner truncate novu-w-[8rem]">
+                <div class="pt-2 flex gap-2 flex-col pr-[2px]">
+                    <div v-for="alt of alternatives" :key="alt.handle" class="flex gap-4 items-center" blink-target>
+                        <div class="field-inner truncate w-32">
                             <label
                                 :for="`${alt.handle}.${pathName}`"
                                 class="publish-field-label"
