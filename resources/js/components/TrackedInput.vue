@@ -1,16 +1,17 @@
 <template>
-    <ui-input
+    <Input
         v-bind="$attrs"
         v-model="trackedValue"
         :name="name"
     >
         <template #append>
-            <ui-button v-if="isDirty" inset variant="ghost" icon="backspace" size="sm" class="mr-1" @click="trackedValue = value" />
+            <Button v-if="isDirty" inset variant="ghost" icon="backspace" size="sm" class="mr-1" @click="trackedValue = value" />
         </template>
-    </ui-input>
+    </Input>
 </template>
 
 <script setup lang="ts">
+import { Button, Input } from '@statamic/cms/ui'
 import { computed, ref, watch } from 'vue'
 import type { TranslationScalar } from '../types/localize'
 

@@ -1,14 +1,14 @@
 <template>
-    <ui-label :for="`${site}.${pathName}`" class="pt-2.5" v-tooltip="pathName" blink-target>
+    <Label :for="`${site}.${pathName}`" class="pt-2.5" v-tooltip="pathName" blink-target>
         <a :href="`#${site}.${pathName}`" @click="setAnchor">
             {{ deslug(name) }}
         </a>
-    </ui-label>
+    </Label>
     <div>
         <!-- main input -->
         <div class="flex gap-2">
             <TrackedInput :id="`${site}.${pathName}`" :name="formName" :value="value" :placeholder="String(value ?? '')" />
-            <ui-button v-if="altCount" type="button" :aria-label="__('localize::general.show_alternatives')" @click="toggle" icon="globe-world-wide-web" />
+            <Button v-if="altCount" type="button" :aria-label="__('localize::general.show_alternatives')" @click="toggle" icon="globe-world-wide-web" />
         </div>
 
         <!-- alternatives -->
@@ -48,6 +48,7 @@
 </template>
 
 <script setup lang="ts">
+import { Button, Label } from '@statamic/cms/ui'
 import { computed, inject, onMounted, ref } from 'vue'
 import { deslug, walkObject } from '../utils'
 import { siteKey, sitesKey } from '../injectionKeys'

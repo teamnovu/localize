@@ -1,25 +1,25 @@
 <template>
     <form @submit.prevent="save" ref="form" class="space-y-4">
-        <ui-header :title="__('localize::general.title')">
-            <ui-button :text="__('Save')" variant="primary"></ui-button>
-        </ui-header>
-        <ui-alert :text="__('localize::general.intro')" />
+        <Header :title="__('localize::general.title')">
+            <Button :text="__('Save')" variant="primary" @click="save" :loading="isSaving" />
+        </Header>
+        <Alert :text="__('localize::general.intro')" />
 
-        <ui-panel v-for="(value, first) in objects" :key="first" :heading="first === '__rootNodes' ? __('localize::general.strings') : deslug(first)" class="max-w-4xl mx-auto">
-            <ui-card class="grid grid-cols-[auto_1fr] gap-4">
+        <Panel v-for="(value, first) in objects" :key="first" :heading="first === '__rootNodes' ? __('localize::general.strings') : deslug(first)" class="max-w-4xl mx-auto">
+            <Card class="grid grid-cols-[auto_1fr] gap-4">
                 <template v-for="(secondValue, second) in value">
                     <Entry v-if="inputType(secondValue)" :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" />
                     <Group v-else :name="String(second)" :value="secondValue" :path="first === '__rootNodes' ? [] : [first]" parent />
                 </template>
-            </ui-card>
-        </ui-panel>
+            </Card>
+        </Panel>
 
-        <ui-alert v-if="Object.values(translations).length === 0" :text="__('localize::general.no_content')" variant="warning" />
-
+        <Alert v-if="Object.values(translations).length === 0" :text="__('localize::general.no_content')" variant="warning" />
     </form>
 </template>
 
 <script setup lang="ts">
+import { Alert, Button, Card, Header, Panel } from '@statamic/cms/ui'
 import { computed, onBeforeUnmount, onMounted, provide, ref, toRef } from 'vue'
 import Entry from './Entry.vue'
 import Group from './Group.vue'
@@ -88,8 +88,7 @@ const objects = computed(() => {
 provide(siteKey, toRef(props, 'site'))
 provide(sitesKey, trackedSites)
 
-
-
+const isSaving = ref(false)
 async function save() {
     const formEl = form.value
     if (!formEl) return
@@ -105,6 +104,7 @@ async function save() {
 
     let response: Response
     try {
+        isSaving.value = true
         response = await fetch(props.action, {
             method: 'POST',
             body: new FormData(formEl),
@@ -114,6 +114,7 @@ async function save() {
     } catch (e: unknown) {
         const message = e instanceof Error ? e.message : 'Something went wrong'
         Statamic.$toast.error(message)
+        isSaving.value = false
         return
     }
 
@@ -131,6 +132,7 @@ async function save() {
             data = null
         }
     }
+    isSaving.value = false
 
     if (!response.ok) {
         if (response.status === 422 && isValidationError(data)) {

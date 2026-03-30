@@ -32,7 +32,7 @@ export function sanitizeSitesMap(sites: SitesMap): SitesMap {
     return out
 }
 
-export function deslug(string: string | number = ''): string | number {
+export function deslug(string: string = ''): string  {
     if (typeof string !== 'string') {
         return string
     }
