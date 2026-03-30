@@ -14,12 +14,12 @@ use Teamnovu\Localize\Services\LangFileService;
 
 class ServiceProvider extends AddonServiceProvider
 {
-    protected $scripts = [
-        __DIR__.'/../resources/dist/js/cp.js',
-    ];
-
-    protected $stylesheets = [
-        __DIR__.'/../resources/dist/css/cp.css',
+    protected $vite = [
+        'input' => [
+            'resources/js/addon.js',
+            'resources/css/addon.css',
+        ],
+        'publicDirectory' => 'resources/dist',
     ];
 
     protected $routes = [

@@ -1,35 +1,39 @@
 <template>
-    <div class="relative w-full">
-        <span v-if="isDirty" class="absolute novu-right-3 novu-mt-[0.4rem] novu-pointer-events-none novu-text-[rgb(67,169,255)]" aria-label="has changed">•</span>
-        <input v-bind="$attrs" v-model="trackedValue" :name="name" class="input-text">
-    </div>
+    <Input
+        v-bind="$attrs"
+        v-model="trackedValue"
+        :name="name"
+    >
+        <template #append>
+            <Button v-if="isDirty" inset variant="ghost" icon="backspace" size="sm" class="mr-1" @click="trackedValue = value" />
+        </template>
+    </Input>
 </template>
 
-<script>
-export default {
-    inheritAttrs: false,
-    props: {
-        name: String,
-        value: String,
-    },
-    data() {
-        return {
-            trackedValue: this.value,
-        }
-    },
-    computed: {
-        isDirty() {
-            // handle "<empty string>" in firefox
-            if (!this.trackedValue && !this.value) return false;
+<script setup lang="ts">
+import { Button, Input } from '@statamic/cms/ui'
+import { computed, ref, watch } from 'vue'
+import type { TranslationScalar } from '../types/localize'
 
-            return this.trackedValue != this.value
-        },
-    },
-    watch: {
-        isDirty(isDirty) {
-            if (isDirty) this.$dirty.add(this.name);
-            else this.$dirty.remove(this.name);
-        }
-    },
-}
+defineOptions({ inheritAttrs: false })
+
+const props = defineProps<{
+    name: string
+    value: TranslationScalar
+}>()
+
+
+const trackedValue = ref(props.value)
+
+const isDirty = computed(() => {
+    // handle "<empty string>" in firefox
+    if (!trackedValue.value && !props.value) return false
+
+    return trackedValue.value !== props.value
+})
+
+watch(isDirty, (dirty) => {
+    if (dirty) Statamic.$dirty.add(props.name)
+    else Statamic.$dirty.remove(props.name)
+})
 </script>

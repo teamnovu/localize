@@ -1,34 +1,23 @@
 <template>
-    <Entry v-if="inputType(value)" :name="name" :value="value" :path="path" class="pl-3 novu-pr-0" />
-    <fieldset v-else class="border dark:border-dark-900 rounded shadow-sm !novu-p-2 novu-mt-5 section">
-        <legend class="novu-translate-y-[-65%] absolute">
-            <Compoennt :is="parent ? 'h3' : 'h4'" class="bg-white dark:bg-dark-600 inline-block novu-px-3">
-                {{ deslug(name) }}
-            </Compoennt>
-        </legend>
-
-        <Group :name="key" :value="children" :path="[...path, name]" v-for="children, key of value" :key="key" />
-
-    </fieldset>
+    <Entry v-if="inputType(value)" :name="name" :value="value" :path="path" class="pl-3 pr-0" />
+    <Panel v-else :heading="String(deslug(name))" class="col-span-2">
+        <Card class="grid grid-cols-[auto_1fr] gap-4">
+            <Group v-for="(children, key) in value" :name="String(key)" :value="children" :path="[...path, name]" :key="key" />
+        </Card>
+    </Panel>
 </template>
 
-<script>
+<script setup lang="ts">
+import { Card, Panel } from '@statamic/cms/ui'
 import Entry from './Entry.vue'
+import Group from './Group.vue'
 import { deslug, inputType } from '../utils'
-export default {
-    name: "Group",
-    components: {
-        Entry,
-    },
-    props: {
-        parent: Boolean,
-        name: String,
-        value: Object,
-        path: Array,
-    },
-    methods: {
-        deslug,
-        inputType
-    },
-}
+import type { TranslationScalar, TranslationTree } from '../types/localize'
+
+defineProps<{
+    parent?: boolean
+    name: string
+    value: TranslationTree | TranslationScalar
+    path: string[]
+}>()
 </script>
