@@ -69,7 +69,6 @@ if (site === undefined || sites === undefined) {
 }
 
 const details = ref(false)
-const grow = ref(false)
 
 const formName = computed(() => {
     return 'translations' + [site.value, ...props.path, props.name].map((str) => `[${str}]`).join('')
@@ -112,9 +111,8 @@ onMounted(() => {
     const path = hash.substring(hash.indexOf('.') + 1)
 
     if (path === pathName.value) {
-        if (siteFromHash !== site.value) {
+        if (siteFromHash === site.value) {
             details.value = true
-            grow.value = true
         }
 
         setTimeout(() => {
@@ -123,7 +121,6 @@ onMounted(() => {
 
             el.closest('[blink-target]')?.classList.add('blink')
             el.focus()
-            details.value = true
         }, 10)
     }
 })
