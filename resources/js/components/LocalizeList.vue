@@ -8,17 +8,17 @@
         </header>
 
         <section v-if="Object.keys(strings).length" class="card py-5 px-6 content mb-6 form-group">
-            <Entry v-for="value, first of strings" :key="first" :name="first" :value="value" :path="[]" class="px-0" />
+            <Entry v-for="(value, first) in strings" :key="first" :name="first" :value="value" :path="[]" class="px-0" />
         </section>
 
-        <section v-for="value, first of objects" :key="first" class="card p-0 content mb-6 form-group">
+        <section v-for="(value, first) in objects" :key="first" class="card p-0 content mb-6 form-group">
             <header class="publish-section-header @container">
                 <div class="publish-section-header-inner">
                     <h2 class="text-base font-semibold mb-1">{{ deslug(first) }}</h2>
                 </div>
             </header>
             <div class="py-5 px-6">
-                <template v-for="secondValue, second of value">
+                <template v-for="(secondValue, second) in value">
                     <Entry v-if="inputType(secondValue)" :name="second" :value="secondValue" :path="[first]"
                         class="px-0" />
                     <Group v-else :name="second" :value="secondValue" :path="[first]" parent class="mb-1" />
@@ -33,111 +33,136 @@
     </form>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, onBeforeUnmount, onMounted, provide, ref, toRef } from 'vue'
 import Entry from './Entry.vue'
 import Group from './Group.vue'
 import { deslug, inputType } from '../utils'
-export default {
 
-    components: {
-        Entry,
-        Group,
-    },
-
-    props: {
-        site: String,
-        sites: Object,
-        action: String,
-    },
-
-    data() {
-        return {
-            trackedSites: this.sites,
-            saveKeyBinding: null
-        }
-    },
-
-    computed: {
-        translations() {
-            const createEmptyTranslationKeys = (obj1, obj2) => {
-                for (let key in obj2) {
-                    if (obj2.hasOwnProperty(key) && !obj1.hasOwnProperty(key)) {
-                        if (obj2[key] instanceof Object) {
-                            obj1[key] = {}
-                            obj1[key] = createEmptyTranslationKeys(obj1[key], obj2[key])
-                        } else {
-                            obj1[key] = ''
-                        }
-                    }
-                }
-                return obj1;
-            }
-            const otherSites = Object.keys(this.trackedSites).filter(x => x !== this.site)
-            let result = this.trackedSites[this.site].translations
-            otherSites.forEach((s) => {result = createEmptyTranslationKeys(result, this.trackedSites[s].translations)})
-            return result
-        },
-        strings() {
-            return Object.entries(this.translations).reduce((acc, [key, value]) => {
-                if (inputType(value)) acc[key] = value
-                return acc
-            }, {})
-        },
-        objects() {
-            return Object.entries(this.translations).reduce((acc, [key, value]) => {
-                if (!inputType(value)) acc[key] = value
-                return acc
-            }, {})
-        }
-    },
-
-    provide() {
-        return {
-            site: this.site,
-            sites: this.trackedSites,
-        }
-    },
-
-    mounted() {
-        this.saveKeyBinding = this.$keys.bindGlobal(
-            ['mod+s', 'mod+return'],
-            (e) => {
-                e.preventDefault()
-                this.save()
-            }
-        )
-    },
-
-    methods: {
-        deslug,
-        inputType,
-        save() {
-            this.$axios({
-                method: "POST",
-                url: this.action,
-                data: this.$refs.form,
-            })
-                .then((response) => {
-                    this.$toast.success(response.data.status)
-                    this.trackedSites = Object.assign(this.trackedSites, response.data.sites)
-                })
-                .catch((error) => this.handleAxiosError(error))
-        },
-        handleAxiosError(e) {
-            if (e.response && e.response.status === 422) {
-                const { message, errors } = e.response.data
-                console.error(errors);
-                this.$toast.error(message)
-            } else if (e.response) {
-                this.$toast.error(e.response.data.message)
-            } else {
-                this.$toast.error(e || 'Something went wrong')
-            }
-        },
-    },
-
-    destroyed() {
-        this.saveKeyBinding.destroy()
-    },
+function readXsrfToken() {
+    const row = document.cookie.split('; ').find((r) => r.startsWith('XSRF-TOKEN='))
+    if (!row) return null
+    return decodeURIComponent(row.slice('XSRF-TOKEN='.length))
 }
+
+const props = defineProps({
+    site: String,
+    sites: Object,
+    action: String,
+})
+
+const form = ref(null)
+const trackedSites = ref(props.sites)
+const saveKeyBinding = ref(null)
+
+function createEmptyTranslationKeys(obj1, obj2) {
+    for (const key in obj2) {
+        if (Object.prototype.hasOwnProperty.call(obj2, key) && !Object.prototype.hasOwnProperty.call(obj1, key)) {
+            if (obj2[key] instanceof Object) {
+                obj1[key] = {}
+                obj1[key] = createEmptyTranslationKeys(obj1[key], obj2[key])
+            } else {
+                obj1[key] = ''
+            }
+        }
+    }
+    return obj1
+}
+
+const translations = computed(() => {
+    const otherSites = Object.keys(trackedSites.value).filter((x) => x !== props.site)
+    let result = trackedSites.value[props.site].translations
+    otherSites.forEach((s) => {
+        result = createEmptyTranslationKeys(result, trackedSites.value[s].translations)
+    })
+    return result
+})
+
+const strings = computed(() => {
+    return Object.entries(translations.value).reduce((acc, [key, value]) => {
+        if (inputType(value)) acc[key] = value
+        return acc
+    }, {})
+})
+
+const objects = computed(() => {
+    return Object.entries(translations.value).reduce((acc, [key, value]) => {
+        if (!inputType(value)) acc[key] = value
+        return acc
+    }, {})
+})
+
+provide('site', toRef(props, 'site'))
+provide('sites', trackedSites)
+
+async function save() {
+    const formEl = form.value
+    if (!formEl) return
+
+    const headers = {
+        Accept: 'application/json',
+        'X-Requested-With': 'XMLHttpRequest',
+    }
+    const xsrf = readXsrfToken()
+    if (xsrf) {
+        headers['X-XSRF-TOKEN'] = xsrf
+    }
+
+    let response
+    try {
+        response = await fetch(props.action, {
+            method: 'POST',
+            body: new FormData(formEl),
+            credentials: 'same-origin',
+            headers,
+        })
+    } catch (e) {
+        Statamic.$toast.error(e?.message ?? 'Something went wrong')
+        return
+    }
+
+    let data = null
+    const ct = response.headers.get('content-type') ?? ''
+    if (ct.includes('application/json')) {
+        try {
+            data = await response.json()
+        } catch {
+            data = null
+        }
+    }
+
+    if (!response.ok) {
+        if (response.status === 422 && data) {
+            console.error(data.errors)
+            Statamic.$toast.error(data.message)
+        } else if (data?.message) {
+            Statamic.$toast.error(data.message)
+        } else {
+            Statamic.$toast.error('Something went wrong')
+        }
+        return
+    }
+
+    if (!data) {
+        Statamic.$toast.error('Something went wrong')
+        return
+    }
+
+    Statamic.$toast.success(data.status)
+    trackedSites.value = Object.assign(trackedSites.value, data.sites)
+}
+
+onMounted(() => {
+    saveKeyBinding.value = Statamic.$keys.bindGlobal(
+        ['mod+s', 'mod+return'],
+        (e) => {
+            e.preventDefault()
+            save()
+        },
+    )
+})
+
+onBeforeUnmount(() => {
+    saveKeyBinding.value?.destroy()
+})
 </script>

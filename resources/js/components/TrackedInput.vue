@@ -5,31 +5,27 @@
     </div>
 </template>
 
-<script>
-export default {
-    inheritAttrs: false,
-    props: {
-        name: String,
-        value: String,
-    },
-    data() {
-        return {
-            trackedValue: this.value,
-        }
-    },
-    computed: {
-        isDirty() {
-            // handle "<empty string>" in firefox
-            if (!this.trackedValue && !this.value) return false;
+<script setup lang="ts">
+import { computed, ref, watch } from 'vue'
 
-            return this.trackedValue != this.value
-        },
-    },
-    watch: {
-        isDirty(isDirty) {
-            if (isDirty) this.$dirty.add(this.name);
-            else this.$dirty.remove(this.name);
-        }
-    },
-}
+defineOptions({ inheritAttrs: false })
+
+const props = defineProps({
+    name: String,
+    value: String,
+})
+
+const trackedValue = ref(props.value)
+
+const isDirty = computed(() => {
+    // handle "<empty string>" in firefox
+    if (!trackedValue.value && !props.value) return false
+
+    return trackedValue.value != props.value
+})
+
+watch(isDirty, (dirty) => {
+    if (dirty) Statamic.$dirty.add(props.name)
+    else Statamic.$dirty.remove(props.name)
+})
 </script>

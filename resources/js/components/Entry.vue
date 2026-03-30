@@ -50,79 +50,76 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
+import { computed, inject, onMounted, ref, unref } from 'vue'
 import { deslug, walkObject } from '../utils'
 import TrackedInput from './TrackedInput.vue'
-export default {
-    components: {
-        TrackedInput,
-    },
-    props: {
-        name: String,
-        value: String,
-        path: Array,
-    },
-    inject: ['site', 'sites'],
-    data() {
-        return {
-            details: false,
-            grow: false,
-        }
-    },
-    computed: {
-        formName() {
-            return 'translations' + [this.site, ...this.path, this.name].map(s => `[${s}]`).join('')
-        },
-        pathName() {
-            return [...this.path, this.name].join('.')
-        },
-        alternatives() {
-            return Object.values(this.sites)
-                .filter(alt => alt.handle != this.site)
-                .map((alt) => ({
-                    handle: alt.handle,
-                    name: alt.name,
-                    value: walkObject(alt.translations, this.path, this.name)
-                }))
-        },
-        altCount() {
-            return Object.keys(this.sites).length - 1
-        },
-    },
-    methods: {
-        deslug,
-        expanded() {
-            this.details = true
-            setTimeout(() => { this.grow = !this.grow }, 10)
-        },
-        setAnchor(e) {
-            e.preventDefault()
-            window.history.replaceState(window.history.state, '', e.target.href)
-            const input = document.getElementById(e.target.href.split('#')[1])
-            input?.focus()
-        }
-    },
-    mounted() {
-        const hash = window.location.hash.substring(1)
-        const site = hash.substring(0, hash.indexOf('.'))
-        const path = hash.substring(hash.indexOf('.') + 1)
 
-        if (path === this.pathName) {
-            if(site !== this.site) {
-                this.details = true
-                this.grow = true
-            }
+const props = defineProps({
+    name: String,
+    value: String,
+    path: Array,
+})
 
-            setTimeout(() => {
-                const el = document.getElementById(window.location.hash.substring(1))
-                if (!el) return
+const site = inject('site')
+const sites = inject('sites')
 
-                el.closest('[blink-target]').classList.add('blink')
-                el.focus()
-            }, 10)
-        }
-    }
+const details = ref(false)
+const grow = ref(false)
+
+const formName = computed(() => {
+    return 'translations' + [site.value, ...props.path, props.name].map((str) => `[${str}]`).join('')
+})
+
+const pathName = computed(() => [...props.path, props.name].join('.'))
+
+const alternatives = computed(() => {
+    const sitesVal = unref(sites)
+    return Object.values(sitesVal)
+        .filter((alt) => alt.handle != site.value)
+        .map((alt) => ({
+            handle: alt.handle,
+            name: alt.name,
+            value: walkObject(alt.translations, props.path, props.name),
+        }))
+})
+
+const altCount = computed(() => Object.keys(unref(sites)).length - 1)
+
+function expanded() {
+    details.value = true
+    setTimeout(() => {
+        grow.value = !grow.value
+    }, 10)
 }
+
+function setAnchor(e) {
+    e.preventDefault()
+    window.history.replaceState(window.history.state, '', e.target.href)
+    const input = document.getElementById(e.target.href.split('#')[1])
+    input?.focus()
+}
+
+onMounted(() => {
+    const hash = window.location.hash.substring(1)
+    const siteFromHash = hash.substring(0, hash.indexOf('.'))
+    const path = hash.substring(hash.indexOf('.') + 1)
+
+    if (path === pathName.value) {
+        if (siteFromHash !== site.value) {
+            details.value = true
+            grow.value = true
+        }
+
+        setTimeout(() => {
+            const el = document.getElementById(window.location.hash.substring(1))
+            if (!el) return
+
+            el.closest('[blink-target]').classList.add('blink')
+            el.focus()
+        }, 10)
+    }
+})
 </script>
 
 <style>
