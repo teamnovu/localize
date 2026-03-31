@@ -67,7 +67,7 @@ class ServiceProvider extends AddonServiceProvider
         Nav::extend(function ($nav) {
             $nav->content('Localize')
                 ->route('localize.dashboard')
-                ->icon('partial')
+                ->icon('globe-world-wide-web')
                 ->can('edit localize');
         });
     }
