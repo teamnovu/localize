@@ -12,8 +12,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
 
-      - name: Install pnpm
-        run: npm install -g pnpm
+      - name: Use composer
+        uses: php-actions/composer@v6
+
+      - name: Use pnpm
+        uses: pnpm/action-setup@v5 
 
       - name: Install dependencies
         run: pnpm install
