@@ -15,10 +15,13 @@ jobs:
       - name: Use composer
         uses: php-actions/composer@v6
 
+      - name: Install composer dependencies
+        run: composer install
+
       - name: Use pnpm
         uses: pnpm/action-setup@v5 
 
-      - name: Install dependencies
+      - name: Install pnpm dependencies
         run: pnpm install
 
       - name: Compile assets
