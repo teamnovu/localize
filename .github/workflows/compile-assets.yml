@@ -19,7 +19,7 @@ jobs:
         run: sudo apt update
 
       - name: Install PHP and Composer
-        run: sudo apt-get install php8.4 composer
+        run: sudo apt-get install php8.4 php8.4-xml composer
 
       - name: Install composer dependencies
         run: composer install
