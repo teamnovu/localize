@@ -8,11 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: ubuntu/php:8.4-25.04_stable
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
+
+      - name: Install PHP and Composer
+        run: apt-get install php8.4 composer
 
       - name: Install composer dependencies
         run: composer install
