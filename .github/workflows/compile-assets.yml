@@ -12,6 +12,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v1
 
+      - name: Update Repos
+        run: sudo apt-get update
+
       - name: Install PHP and Composer
         run: sudo apt-get install php8.4 composer
 
