@@ -41,7 +41,7 @@
         },
         "download-dist": {
             "url": "https://github.com/teamnovu/localize/releases/download/{$version}/dist.tar.gz",
-            "path": "resources/dist"
+            "path": "resources/dist/build"
         }
     },
     "minimum-stability": "dev",
