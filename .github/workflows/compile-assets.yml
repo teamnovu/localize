@@ -7,16 +7,19 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on:
+      labels: fast-boi
+    container:
+      image: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
 
       - name: Install dependencies
-        run: pnpm install
+        run: npm install
 
       - name: Compile assets
-        run: pnpm build
+        run: npm run build
 
       - name: Create zip
         run: tar -czvf dist.tar.gz -C resources/dist build
