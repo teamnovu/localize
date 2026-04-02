@@ -8,12 +8,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: ubuntu/php:8.4-25.04_stable
     steps:
       - name: Checkout code
         uses: actions/checkout@v1
-
-      - name: Use composer
-        uses: php-actions/composer@v6
 
       - name: Install composer dependencies
         run: composer install
